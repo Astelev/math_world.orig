@@ -116,3 +116,9 @@ class Person:
             self.run.framedraw(screen, 400, 310)
         else:
             screen.blit(self.image, (400, 310))
+
+    def move(self, side):
+        if side:
+            self.x = self.x + 5
+        else:
+            self.x = self.x - 5
