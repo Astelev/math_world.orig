@@ -41,6 +41,6 @@ if __name__ == '__main__':
         else:
             person.status_set("move", False)
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(30)
     pygame.quit()
 # testim

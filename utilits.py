@@ -62,10 +62,10 @@ class World:
             for i in self.col:
                 if i.name == name:
                     return i
-        elif i > -1:
-            return self.col[number]
-        else:
-            return self.col
+                elif i > -1:
+                    return self.col[number]
+                else:
+                    return self.col
 
     def click(self, x, y, moveobj=False):
         for i in self.col:
@@ -75,8 +75,7 @@ class World:
 
 
 class Number:
-    def __init__(self, count, x, y, size=50, name="", movable=True):
-        self.move = movable
+    def __init__(self, count, x, y, size=50, name=""):
         self.c = count
         self.name = name
         self.x = x
@@ -99,7 +98,6 @@ class Person:
     def __init__(self, size=50, name=""):
         self.image = load_image("person.png")
         self.run = Anim("run", 2)
-        self.move = False
         self.name = name
         self.x = 0
         self.y = 0
