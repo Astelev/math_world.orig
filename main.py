@@ -22,7 +22,7 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEMOTION:
                 if event.buttons[0]:
                     x, y = event.pos
-                    returnd = world.click(x, y, True)
+                    returnd = world.click(x, y)
                     if returnd:
                         returnd.move(x, y, world.camx, world.camy)
             if event.type == pygame.KEYDOWN:

@@ -48,7 +48,7 @@ class World:
             i.display(int(self.camx), int(self.camy), self.scr)
         pygame.draw.rect(self.scr, self.florcol, (0, 10 - self.camy, 1000, 1000))
 
-    def jump(self, start=False):
+    def jump(self):
         do = self.return_obj("person").do
         if do[1] <= 120:
             self.camy = self.camy + (do[1] - 60) / 10
@@ -67,7 +67,7 @@ class World:
                 else:
                     return self.col
 
-    def click(self, x, y, moveobj=False):
+    def click(self, x, y):
         for i in self.col:
             if i.x < x + self.camx < i.x + i.size and i.y < y + self.camy < i.y + i.size:
                 return i
