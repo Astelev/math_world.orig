@@ -36,26 +36,18 @@ class World:
         self.camy = cameray
         self.col = objects
         self.scr = screen
+        self.camera_binding = "person"
 
     def create_object(self, object):
         self.col.append(object)
 
     def display(self):
         self.scr.fill(self.backcol)
-        if self.return_obj("person").do[0] == "jump":
-            self.jump()
+        self.camx = self.return_obj(self.camera_binding).x - 400
+        self.camy = self.return_obj(self.camera_binding).y - 510
         for i in self.col:
             i.display(int(self.camx), int(self.camy), self.scr)
         pygame.draw.rect(self.scr, self.florcol, (0, 10 - self.camy, 1000, 1000))
-
-    def jump(self):
-        do = self.return_obj("person").do
-        if do[1] <= 120:
-            self.camy = self.camy + (do[1] - 60) / 10
-            do[1] = do[1] + 1
-        elif do[1] > 120:
-            do[0] = ""
-            do[1] = 0
 
     def return_obj(self, name="", number=-1):
         if name != "":
@@ -95,9 +87,10 @@ class Number:
 
 
 class Person:
-    def __init__(self, size=50, name=""):
+    def __init__(self, size=200, name=""):
         self.image = load_image("person.png")
-        self.run = Anim("run", 2)
+        self.runright = Anim("runright", 2)
+        self.runleft = Anim("runleft", 2)
         self.name = name
         self.x = 0
         self.y = 0
@@ -112,13 +105,28 @@ class Person:
             self.do[1] = 0
 
     def display(self, x, y, screen):
-        if self.do[0] == "move":
-            self.run.framedraw(screen, 400, 310)
+        if self.do[0] == "jump":
+            self.jump()
+            screen.blit(self.image, (self.x - x, self.y - y - self.size))
+        elif self.do[0] == "moveright":
+            self.runright.framedraw(screen, self.x - x, self.y - y - self.size)
+        elif self.do[0] == "moveleft":
+            self.runleft.framedraw(screen, self.x - x, self.y - y - self.size)
         else:
-            screen.blit(self.image, (400, 310))
+            screen.blit(self.image, (self.x - x, self.y - y - self.size))
 
     def move(self, side):
         if side:
             self.x = self.x + 5
         else:
             self.x = self.x - 5
+
+    def jump(self):
+        if self.do[1] <= 120:
+            self.y = self.y + (self.do[1] - 60) / 10
+            self.do[1] = self.do[1] + 1
+        elif self.do[1] > 120:
+            self.do[0] = ""
+            self.do[1] = 0
+
+

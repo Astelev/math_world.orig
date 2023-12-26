@@ -11,7 +11,7 @@ if __name__ == '__main__':
     screen.fill((0, 0, 0))
     clock = pygame.time.Clock()
     running = True
-    world = World(0, -510, screen)
+    world = World(0, 0, screen)
     world.create_object(Person(name="person"))
     world.create_object(Number(10, 10, -30))
     person = world.return_obj("person")
@@ -35,15 +35,16 @@ if __name__ == '__main__':
         world.display()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
-            world.camx -= 5
+            person.move(False)
             if person.do[0] != "jump":
-                person.status_set("move")
+                person.status_set("moveleft")
         elif keys[pygame.K_d]:
-            world.camx += 5
+            person.move(True)
             if person.do[0] != "jump":
-                person.status_set("move")
+                person.status_set("moveright")
         else:
-            person.status_set("move", False)
+            person.status_set("moveleft", False)
+            person.status_set("moveright", False)
         pygame.display.flip()
         clock.tick(100)
     pygame.quit()
