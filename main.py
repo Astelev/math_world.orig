@@ -1,7 +1,7 @@
 import pygame
 import os
 import sys
-from utilits import World, Number, Person, load_image, Anim
+from utilits import World, Number, Person, load_image, Anim, Collision_reactangle
 
 if __name__ == '__main__':
     # инициализация Pygame:
@@ -14,6 +14,8 @@ if __name__ == '__main__':
     world = World(0, 0, screen)
     world.create_object(Person(name="person"))
     world.create_object(Number(10, 10, -30))
+    world.create_collision(Collision_reactangle(-1000, 10, 2000, 1000))
+    world.create_collision(Collision_reactangle(-500, -100, 200, 100))
     person = world.return_obj("person")
     flag = False
     while running:
@@ -26,7 +28,7 @@ if __name__ == '__main__':
                 flag = False
             if event.type == pygame.KEYDOWN:
                 if event.key == 32:
-                    person.status_set("jump")
+                    person.jump()
         if flag:
             x, y = pygame.mouse.get_pos()
             returnd = world.click(x, y)
