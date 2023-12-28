@@ -90,7 +90,6 @@ class Number:
         self.x = camx + x - self.sizex // 2
         self.y = camy + y - self.sizey // 2
         self.do[0] = "move"
-        print(self.x, self.y)
 
 
 class Person:
@@ -116,7 +115,6 @@ class Person:
 
     def display(self, x, y, screen, collision):
         c = True
-        print(self.vy)
         for i in collision:
             col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
             if "x+" in col and self.vx >= 0:

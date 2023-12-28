@@ -16,6 +16,7 @@ if __name__ == '__main__':
     world.create_object(Number(10, 10, -30))
     world.create_collision(Collision_reactangle(-1000, 10, 2000, 1000))
     world.create_collision(Collision_reactangle(-500, -100, 200, 100))
+    world.create_collision(Collision_reactangle(100, -200, 300, 50))
     person = world.return_obj("person")
     flag = False
     while running:
@@ -50,4 +51,3 @@ if __name__ == '__main__':
         pygame.display.flip()
         clock.tick(100)
     pygame.quit()
-# testim
