@@ -37,6 +37,7 @@ class World:
         self.col = objects
         self.collisions = []
         self.scr = screen
+        # обьект к которому будет прикреплена камера
         self.camera_binding = "person"
 
     def create_object(self, object):
@@ -46,6 +47,7 @@ class World:
         self.collisions.append(object)
 
     def display(self):
+        #отображение обьектов и колизий
         self.scr.fill(self.backcol)
         self.camx = self.return_obj(self.camera_binding).x - 400
         self.camy = self.return_obj(self.camera_binding).y - 510
@@ -55,6 +57,7 @@ class World:
             i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
 
     def return_obj(self, name="", number=-1):
+        #возвращает обьект с именем или с индексом
         if name != "":
             for i in self.col:
                 if i.name == name:
@@ -65,6 +68,7 @@ class World:
                     return self.col
 
     def click(self, x, y):
+        #возвращает обьект на координатах x, y, eсли обьекта нет то возвращает False
         for i in self.col:
             if i.x < x + self.camx < i.x + i.sizex and i.y < y + self.camy < i.y + i.sizey:
                 return i
@@ -85,15 +89,25 @@ class Number:
         font = pygame.font.Font(None, self.sizex)
         text = font.render(str(self.c), True, (255, 255, 255))
         screen.blit(text, (self.x - x, self.y - y))
+        print(self.do)
 
     def move(self, x, y, camx, camy):
         self.x = camx + x - self.sizex // 2
         self.y = camy + y - self.sizey // 2
-        self.do[0] = "move"
+
+    def status_set(self, do, status=True):
+        # задать статус для анимаций
+        if status:
+            self.do[0] = do
+        elif self.do[0] == do and not status:
+            self.do[0] = ""
+            self.do[1] = 0
+
 
 
 class Person:
     def __init__(self, size=109, name=""):
+        # загрузка анимаций
         self.image = load_image("person.png")
         self.runright = Anim("runright", 2)
         self.runleft = Anim("runleft", 2)
@@ -107,6 +121,7 @@ class Person:
         self.do = ["", 0]
 
     def status_set(self, do, status=True):
+        # задать статус для анимаций, во время полёта статус автоматически "Jump"
         if status:
             self.do[0] = do
         elif self.do[0] == do and not status:
@@ -114,6 +129,7 @@ class Person:
             self.do[1] = 0
 
     def display(self, x, y, screen, collision):
+        #отображение и просчёт движения
         c = True
         for i in collision:
             col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
@@ -162,6 +178,11 @@ class Collision_reactangle:
         self.sizey = sizey
 
     def collision_chek(self, x, y, sizex, sizey):
+        #проверка на столкновение с колизией
+        #возвращает тип столкновение y+ - столкновение по y с верху
+        #y- столкновение по y с низу
+        #x+ столкновение по x слева
+        #x- столкновение по x cправа
         result = []
         if self.x + self.sizex > x and self.x < x + sizex and self.y + self.sizey + 20 > y and self.y - 20 < y + sizey:
             if self.y >= y:
@@ -178,6 +199,7 @@ class Collision_reactangle:
         return result
 
     def display(self, x, y, screen, color):
+        #отображение
         pygame.draw.rect(screen, color, (self.x - x, self.y - y, self.sizex, self.sizey))
 
 

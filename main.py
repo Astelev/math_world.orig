@@ -17,8 +17,9 @@ if __name__ == '__main__':
     world.create_collision(Collision_reactangle(-1000, 10, 2000, 1000))
     world.create_collision(Collision_reactangle(-500, -100, 200, 100))
     world.create_collision(Collision_reactangle(100, -200, 300, 50))
-    person = world.return_obj("person")
-    flag = False
+    person = world.return_obj("person") # ссылается на персонажа
+    flag = False # храниет в себе нажата ли кнопка мыши
+    returnd = False # хранит в себе обьект на который было проиведено нажатие
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -30,11 +31,14 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if event.key == 32:
                     person.jump()
-        if flag:
+        if not flag and returnd:
+            returnd.status_set("move", False)
+        elif flag:
             x, y = pygame.mouse.get_pos()
             returnd = world.click(x, y)
             if returnd:
                 returnd.move(x, y, world.camx, world.camy)
+                returnd.status_set("move", True)
         world.display()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
