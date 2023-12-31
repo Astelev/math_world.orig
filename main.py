@@ -1,18 +1,17 @@
 import pygame
 import os
 import sys
-from utilits import World, Number, Person, load_image, Anim, Collision_reactangle
+from utilits import World, Number, Person, load_image, Anim, Collision_reactangle, Physical_object
 
 if __name__ == '__main__':
     # инициализация Pygame:
     pygame.init()
     size = 1000, 800
     screen = pygame.display.set_mode(size)
-    screen.fill((0, 0, 0))
     clock = pygame.time.Clock()
     running = True
     world = World(0, 0, screen)
-    world.create_object(Person(name="person"))
+    world.create_object(Person(3, 4, name="person"))
     world.create_object(Number(10, 10, -30))
     world.create_collision(Collision_reactangle(-1000, 10, 2000, 1000))
     world.create_collision(Collision_reactangle(-500, -100, 200, 100))
@@ -21,6 +20,7 @@ if __name__ == '__main__':
     flag = False # храниет в себе нажата ли кнопка мыши
     returnd = False # хранит в себе обьект на который было проиведено нажатие
     while running:
+        x, y = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -28,16 +28,18 @@ if __name__ == '__main__':
                 flag = True
             if event.type == pygame.MOUSEBUTTONUP:
                 flag = False
+                if returnd and x < 200 and y < 100:
+                    if person.put(x, y, returnd):
+                        world.del_object(returnd.name)
             if event.type == pygame.KEYDOWN:
                 if event.key == 32:
                     person.jump()
         if not flag and returnd:
             returnd.status_set("move", False)
         elif flag:
-            x, y = pygame.mouse.get_pos()
             returnd = world.click(x, y)
             if returnd:
-                returnd.move(x, y, world.camx, world.camy)
+                returnd.moveing(x, y, world.camx, world.camy)
                 returnd.status_set("move", True)
         world.display()
         keys = pygame.key.get_pressed()
