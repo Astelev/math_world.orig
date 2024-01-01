@@ -124,6 +124,8 @@ class Person:
         self.sizex = 50
         self.do = ["", 0]
         self.inventar = [["" for j in range(col)] for i in range(row)]
+        self.sizeinventarx = 400
+        self.sizeinventary = 100
         self.movable = False
 
     def status_set(self, do, status=True):
@@ -165,9 +167,9 @@ class Person:
             self.runleft.framedraw(screen, self.x - x, self.y - y)
         else:
             screen.blit(self.image, (self.x - x, self.y - y))
-        pygame.draw.rect(screen, (150, 150, 150), (0, 0, 200, 100))
-        sizey = 100 // len(self.inventar)
-        sizex = 200 // len(self.inventar[0])
+        pygame.draw.rect(screen, (150, 150, 150), (0, 0, self.sizeinventarx, self.sizeinventary))
+        sizey = self.sizeinventary // len(self.inventar)
+        sizex = self.sizeinventarx // len(self.inventar[0])
         for i in range(len(self.inventar)):
             for j in range(len(self.inventar[0])):
                 pygame.draw.rect(screen, (0, 0, 0), (j * sizex + 1, i * sizey + 1, sizex - 2, sizey - 2))
@@ -187,8 +189,8 @@ class Person:
             self.vy = self.vy - 15
 
     def put(self, xmous, ymous, object):
-        sizey = 100 // len(self.inventar)
-        sizex = 200 // len(self.inventar[0])
+        sizey = self.sizeinventary // len(self.inventar)
+        sizex = self.sizeinventarx // len(self.inventar[0])
         row = ymous // sizey
         col = xmous // sizex
         if self.inventar[row][col] == "":
@@ -198,14 +200,14 @@ class Person:
             return False
 
     def get_it(self, xmous, ymous):
-        sizey = 100 // len(self.inventar)
-        sizex = 200 // len(self.inventar[0])
+        sizey = self.sizeinventary // len(self.inventar)
+        sizex = self.sizeinventarx // len(self.inventar[0])
         row = ymous // sizey
         col = xmous // sizex
         if self.inventar[row][col] != "":
             returnd = self.inventar[row][col]
-            returnd.x = self.x - 200
-            returnd.y = self.x - 410
+            returnd.x = self.x - 400 + self.sizeinventarx
+            returnd.y = self.y - 510 + self.sizeinventary
             self.inventar[row][col] = ""
             return returnd
         else:

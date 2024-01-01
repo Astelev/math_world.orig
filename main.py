@@ -11,7 +11,7 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
     running = True
     world = World(0, 0, screen)
-    world.create_object(Person(3, 4, name="person"))
+    world.create_object(Person(3, 10, name="person"))
     world.create_object(Number(10, 10, -30))
     world.create_object(Number(10, 10, -20))
     world.create_collision(Collision_reactangle(-1000, 10, 2000, 1000))
@@ -27,14 +27,14 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 flag = True
-                if x < 200 and y < 100:
+                if x < person.sizeinventarx and y < person.sizeinventary:
                     returnd = person.get_it(x, y)
                     if returnd:
                         world.create_object(returnd)
 
             if event.type == pygame.MOUSEBUTTONUP:
                 flag = False
-                if returnd and x < 200 and y < 100:
+                if returnd and x < person.sizeinventarx and y < person.sizeinventary:
                     if person.put(x, y, returnd):
                         world.del_object(world.col.index(returnd))
             if event.type == pygame.KEYDOWN:
