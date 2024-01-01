@@ -76,16 +76,16 @@ class World:
 
 
 class Person:
-    def __init__(self, row, col, size=109, name=""):
+    def __init__(self, row, col, x=0, y=-200, size=109, name="person"):
         # загрузка анимаций
         self.image = load_image("person.png")
         self.runright = Anim("runright", 2)
         self.runleft = Anim("runleft", 2)
         self.name = name
-        self.x = 0
+        self.x = x
         self.vx = 0
         self.vy = 0
-        self.y = -200
+        self.y = y
         self.sizey = size
         self.sizex = 50
         self.do = ["", 0]
@@ -178,6 +178,11 @@ class Person:
             return returnd
         else:
             return False
+
+    def data_return(self):
+        return "Person" + " " + str(len(self.inventar)) + " " + str(len(self.inventar[0])) + " " + str(self.x) + " " +\
+            str(self.y)
+
 
 class Collision_reactangle:
     def __init__(self, x, y, sizex, sizey):

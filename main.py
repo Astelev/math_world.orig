@@ -39,6 +39,26 @@ def pausmenu(screen, clock):
         pygame.display.flip()
         clock.tick(100)
 
+def save_all(world, slot):
+    f = open('savefiles\save' + slot +'.txt', 'w')
+    for i in world.col:
+        f.write(i.data_return() + "\n")
+    f.close()
+
+def open_all(world, slot):
+    f = open('savefiles\save' + slot +'.txt', 'r')
+    for line in f:
+        obj = line.split()
+        if obj[0] == "Person":
+            world.create_object(Person(int(obj[1]), int(obj[2])))
+            world.col[-1].x = float(obj[3])
+            world.col[-1].y = float(obj[4])
+        elif obj[0] == "Number":
+            world.create_object(Number(int(obj[1]), float(obj[2]), float(obj[3])))
+    f.close()
+
+
+
 
 if __name__ == '__main__':
     # инициализация Pygame:
@@ -49,9 +69,10 @@ if __name__ == '__main__':
     if startscreen(screen, clock):
         running = True
         world = World(0, 0, screen)
-        world.create_object(Person(3, 10, name="person"))
+        open_all(world, "1")
+        """world.create_object(Person(3, 10))
         world.create_object(Number(10, 10, -30))
-        world.create_object(Number(10, 10, -20))
+        world.create_object(Number(10, 10, -20))"""
         world.create_collision(Collision_reactangle(-1000, 10, 2000, 1000))
         world.create_collision(Collision_reactangle(-500, -100, 200, 100))
         world.create_collision(Collision_reactangle(100, -200, 300, 50))
@@ -102,6 +123,7 @@ if __name__ == '__main__':
                 person.status_set("moveright", False)
             if keys[pygame.K_ESCAPE]:
                 if not pausmenu(screen, clock):
+                    save_all(world, "1")
                     if not startscreen(screen, clock):
                         running = False
             pygame.display.flip()

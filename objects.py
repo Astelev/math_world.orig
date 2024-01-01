@@ -33,3 +33,6 @@ class Number:
         elif self.do[0] == do and not status:
             self.do[0] = ""
             self.do[1] = 0
+
+    def data_return(self):
+        return "Number" + " " + str(self.c) + " " + str(self.x) + " " + str(self.y)
