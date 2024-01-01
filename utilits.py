@@ -16,7 +16,7 @@ def load_image(name):
 class Button:
     def __init__(self, x, y, text, size=50):
         font = pygame.font.Font(None, size)
-        self.text = font.render(text, True, (100, 255, 100))
+        self.text = font.render(text, True, (10, 100, 100))
         self.x = x
         self.y = y
         self.w = self.text.get_width()
@@ -25,7 +25,7 @@ class Button:
 
     def display(self, screen):
         screen.blit(self.text, (self.x, self.y))
-        pygame.draw.rect(screen, (0, 255, 0), (self.x - 10, self.y - 10,
+        pygame.draw.rect(screen, (10, 100, 100), (self.x - 10, self.y - 10,
                                                self.w + 20, self.h + 20), 1)
     def check(self, x, y):
         if self.x < x < self.x + self.w and self.y < y < self.y + self.h:
