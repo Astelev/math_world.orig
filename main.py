@@ -1,7 +1,8 @@
 import pygame
 import os
 import sys
-from utilits import World, Number, Person, load_image, Anim, Collision_reactangle, Physical_object
+from utilits import World, Person, load_image, Anim, Collision_reactangle, Physical_object
+from objects import Number
 
 if __name__ == '__main__':
     # инициализация Pygame:
