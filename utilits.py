@@ -63,10 +63,8 @@ class World:
                 if i.name == name:
                     return i
 
-    def del_object(self, name):
-        for i in range(len(self.col)):
-            if self.col[i].name == name:
-                self.col.pop(i)
+    def del_object(self, i):
+        self.col.pop(i)
 
     def click(self, x, y):
         #возвращает обьект на координатах x, y, eсли обьекта нет то возвращает False
@@ -79,17 +77,23 @@ class World:
 class Number:
     def __init__(self, count, x, y, size=50, name=""):
         self.c = count
-        self.name = name
+        self.name = str(count)
         self.x = x
         self.y = y
         self.sizex = size
         self.sizey = size
         self.do = ["", 0]
+        self.movable = True
 
     def display(self, x, y, screen, colis):
         font = pygame.font.Font(None, self.sizex)
         text = font.render(str(self.c), True, (255, 255, 255))
         screen.blit(text, (self.x - x, self.y - y))
+
+    def display_into_inventar(self, screen, x, y, sizex, sizey):
+        font = pygame.font.Font(None, sizex - 2)
+        text = font.render(str(self.c), True, (255, 255, 255))
+        screen.blit(text, (x, y))
 
     def moveing(self, x, y, camx, camy):
         self.x = camx + x - self.sizex // 2
@@ -120,6 +124,7 @@ class Person:
         self.sizex = 50
         self.do = ["", 0]
         self.inventar = [["" for j in range(col)] for i in range(row)]
+        self.movable = False
 
     def status_set(self, do, status=True):
         # задать статус для анимаций, во время полёта статус автоматически "Jump"
@@ -165,17 +170,17 @@ class Person:
         sizex = 200 // len(self.inventar[0])
         for i in range(len(self.inventar)):
             for j in range(len(self.inventar[0])):
+                pygame.draw.rect(screen, (0, 0, 0), (j * sizex + 1, i * sizey + 1, sizex - 2, sizey - 2))
                 if self.inventar[i][j] == "":
-                    pygame.draw.rect(screen, (255, 255, 255), (j * sizex + 1, i * sizey + 1, sizex - 2 , sizey - 2))
+                    pass
+                else:
+                    self.inventar[i][j].display_into_inventar(screen, j * sizex + 1, i * sizey + 1, sizex , sizey)
 
     def move(self, side):
         if side:
             self.vx = 5
         else:
             self.vx = -5
-
-    def moveing(self, x, y, z, k):
-        pass
 
     def jump(self):
         if self.do[0] != "jump":
@@ -192,6 +197,19 @@ class Person:
         else:
             return False
 
+    def get_it(self, xmous, ymous):
+        sizey = 100 // len(self.inventar)
+        sizex = 200 // len(self.inventar[0])
+        row = ymous // sizey
+        col = xmous // sizex
+        if self.inventar[row][col] != "":
+            returnd = self.inventar[row][col]
+            returnd.x = self.x - 200
+            returnd.y = self.x - 410
+            self.inventar[row][col] = ""
+            return returnd
+        else:
+            return False
 
 class Collision_reactangle:
     def __init__(self, x, y, sizex, sizey):
