@@ -3,6 +3,7 @@ import os
 import sys
 import objects
 
+pygame.init()
 
 def load_image(name):
     fullname = os.path.join('data', name)
@@ -11,6 +12,27 @@ def load_image(name):
         sys.exit()
     image = pygame.image.load(fullname)
     return image
+
+class Button:
+    def __init__(self, x, y, text, size=50):
+        font = pygame.font.Font(None, size)
+        self.text = font.render(text, True, (100, 255, 100))
+        self.x = x
+        self.y = y
+        self.w = self.text.get_width()
+        self.h = self.text.get_height()
+
+
+    def display(self, screen):
+        screen.blit(self.text, (self.x, self.y))
+        pygame.draw.rect(screen, (0, 255, 0), (self.x - 10, self.y - 10,
+                                               self.w + 20, self.h + 20), 1)
+    def check(self, x, y):
+        if self.x < x < self.x + self.w and self.y < y < self.y + self.h:
+            return True
+        else:
+            return False
+
 
 
 class Anim:
