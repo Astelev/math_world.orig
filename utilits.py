@@ -206,8 +206,8 @@ class Person:
         col = xmous // sizex
         if self.inventar[row][col] != "":
             returnd = self.inventar[row][col]
-            returnd.x = self.x - 400 + self.sizeinventarx
-            returnd.y = self.y - 510 + self.sizeinventary
+            returnd.x = self.x - 400 + col * sizex
+            returnd.y = self.y - 510 + row * sizey
             self.inventar[row][col] = ""
             return returnd
         else:
