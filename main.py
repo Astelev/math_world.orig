@@ -3,7 +3,7 @@ import os
 import sys
 from utilits import World, Person, load_image, Anim, Collision_reactangle, Button, Text
 from objects import Number
-from mobs import Physical_object
+from mobs import Enemy
 import random
 
 pygame.init()
@@ -103,6 +103,10 @@ def open_all(world, slot):
                 world.col[-1].hp = int(obj[5])
             elif obj[0] == "Number":
                 world.create_object(Number(int(obj[1]), float(obj[2]), float(obj[3])))
+            elif obj[0] == "Enemy":
+                person = world.return_obj(name="person")
+                world.create_object(Enemy(float(obj[1]), float(obj[2]), person))
+                world.col[-1].hp = int(obj[3])
         f.close()
         return True
     except:
@@ -138,9 +142,11 @@ if __name__ == '__main__':
             world.col = []
             world.collisions = []
             if startparam[1]:
-                world.create_object(Person(3, 10))
+                person = Person(3, 10)
+                world.create_object(person)
                 world.create_object(Number(10, 10, -30))
                 world.create_object(Number(10, 10, -20))
+                world.create_object(Enemy(900, -300, person))
                 slot = startparam[2]
             else:
                 slot = startparam[2]
@@ -158,6 +164,9 @@ if __name__ == '__main__':
             while running:
                 #цикл игры, если прервать break то переходит в меню, если прервать с помощью running = False выходит из программы
                 x, y = pygame.mouse.get_pos()
+                if not flag and returnd: # если до этого был обьект который мы двигали а сейчас отпустили убирает у него статус двигается
+                    returnd.status_set("move", False)
+                returnd = world.click(x, y)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
@@ -167,6 +176,9 @@ if __name__ == '__main__':
                             returnd = person.get_it(x, y)
                             if returnd:
                                 world.create_object(returnd)
+                        elif returnd:
+                            if returnd.damageble:
+                                person.attack(returnd)
                     if event.type == pygame.MOUSEBUTTONUP :
                         flag = False
                         if returnd and x < person.sizeinventarx and y < person.sizeinventary:
@@ -177,18 +189,14 @@ if __name__ == '__main__':
                             person.jump()
                         elif event.key == pygame.K_b:
                             person.damag(390)
-                if not flag and returnd:
-                    returnd.status_set("move", False)
-                    returnd = False
-                elif flag and person.do[0] != "dead":
-                    returnd = world.click(x, y)
-                    if returnd:
-                        if returnd.movable:
-                            returnd.moveing(x, y, world.camx, world.camy)
-                            returnd.status_set("move", True)
-                world.display()
-                keys = pygame.key.get_pressed()
                 if person.do[0] != "dead":
+                    if flag:
+                        if returnd:
+                            if returnd.movable:
+                                returnd.moveing(x, y, world.camx, world.camy)
+                    if person.y > 10000:
+                        person.status_set("dead", True)
+                    keys = pygame.key.get_pressed()
                     if keys[pygame.K_a] :
                         person.move(False)
                         if person.do[0] != "jump":
@@ -208,6 +216,7 @@ if __name__ == '__main__':
                     break
                 else:
                     running = False
+                world.display()
                 pygame.display.flip()
                 clock.tick(100)
             if not running:

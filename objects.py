@@ -11,6 +11,7 @@ class Number:
         self.sizey = size
         self.do = ["", 0]
         self.movable = True
+        self.damageble = False
 
     def display(self, x, y, screen, colis):
         font = pygame.font.Font(None, self.sizex)
@@ -25,6 +26,7 @@ class Number:
     def moveing(self, x, y, camx, camy):
         self.x = camx + x - self.sizex // 2
         self.y = camy + y - self.sizey // 2
+        self.status_set("move", True)
 
     def status_set(self, do, status=True):
         # задать статус для анимаций

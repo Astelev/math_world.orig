@@ -94,6 +94,8 @@ class World:
         self.camy = self.return_obj(self.camera_binding).y - 510
         for i in self.col:
             i.display(int(self.camx), int(self.camy), self.scr, self.collisions)
+            if i.do[0] == "dead":
+                self.del_object(self.col.index(i))
         for i in self.collisions:
             i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
 
@@ -123,6 +125,7 @@ class Person:
         self.image = load_image("person.png")
         self.runright = Anim("runright", 2)
         self.runleft = Anim("runleft", 2)
+        self.attackAnim = Anim("person_attack", 1)
         self.name = name
         self.x = x
         self.vx = 0
@@ -136,6 +139,13 @@ class Person:
         self.sizeinventary = 100
         self.hp = 400
         self.movable = False
+        self.damageble = False
+
+    def attack(self, enemy):
+        self.status_set("attack", True)
+        if self.do[1] == 0:
+            enemy.damag(10)
+            self.do[1] = 20
 
     def damag(self, level):
         self.hp -= level
@@ -186,6 +196,12 @@ class Person:
                 self.runright.framedraw(screen, self.x - x, self.y - y)
             elif self.do[0] == "moveleft":
                 self.runleft.framedraw(screen, self.x - x, self.y - y)
+            elif self.do[0] == "attack":
+                if self.do[1] > 0:
+                    self.do[1] = self.do[1] - 1
+                else:
+                    self.status_set("attack", False)
+                self.attackAnim.framedraw(screen, self.x - x, self.y - y)
             else:
                 screen.blit(self.image, (self.x - x, self.y - y))
             pygame.draw.rect(screen, (0, 100, 100), (0, 0, self.sizeinventarx, self.sizeinventary))
