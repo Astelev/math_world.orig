@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 import objects
+import random
 
 def load_image(name):
     fullname = os.path.join('data', name)
@@ -133,7 +134,17 @@ class Person:
         self.inventar = [["" for j in range(col)] for i in range(row)]
         self.sizeinventarx = 400
         self.sizeinventary = 100
+        self.hp = 400
         self.movable = False
+
+    def damag(self, level):
+        self.hp -= level
+        if self.hp <= 0:
+            self.status_set("dead", True)
+
+    def hill(self, level):
+        if self.hp < 400:
+            self.hp += level
 
     def status_set(self, do, status=True):
         # задать статус для анимаций, во время полёта статус автоматически "Jump"
@@ -145,45 +156,50 @@ class Person:
 
     def display(self, x, y, screen, collision):
         #отображение и просчёт движения
-        c = True
-        for i in collision:
-            col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-            if "x+" in col and self.vx >= 0:
-                self.vx = 0
-            elif "x-" in col and self.vx <= 0:
-                self.vx = 0
-            if "y+" in col and self.vy >= 0:
-                self.vy = 0
-                c = False
-                if self.do[0] != "moveright" and self.do[0] != "moveleft":
+        if self.do[0] != "dead":
+            if random.randint(0,1):
+                self.hill(random.randint(0,1))
+            c = True
+            for i in collision:
+                col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+                if "x+" in col and self.vx >= 0:
                     self.vx = 0
-            elif "y-" in col and self.vy <= 0:
-                self.vy = 0
-        if c:
-            self.status_set("jump", True)
-        else:
-            self.status_set("jump", False)
-        self.x = self.x + self.vx
-        if self.do[0] == "jump":
-            self.y = self.y + self.vy
-            self.vy = self.vy + 0.5
-            screen.blit(self.image, (self.x - x, self.y - y))
-        elif self.do[0] == "moveright":
-            self.runright.framedraw(screen, self.x - x, self.y - y)
-        elif self.do[0] == "moveleft":
-            self.runleft.framedraw(screen, self.x - x, self.y - y)
-        else:
-            screen.blit(self.image, (self.x - x, self.y - y))
-        pygame.draw.rect(screen, (150, 150, 150), (0, 0, self.sizeinventarx, self.sizeinventary))
-        sizey = self.sizeinventary // len(self.inventar)
-        sizex = self.sizeinventarx // len(self.inventar[0])
-        for i in range(len(self.inventar)):
-            for j in range(len(self.inventar[0])):
-                pygame.draw.rect(screen, (0, 0, 0), (j * sizex + 1, i * sizey + 1, sizex - 2, sizey - 2))
-                if self.inventar[i][j] == "":
-                    pass
-                else:
-                    self.inventar[i][j].display_into_inventar(screen, j * sizex + 1, i * sizey + 1, sizex , sizey)
+                elif "x-" in col and self.vx <= 0:
+                    self.vx = 0
+                if "y+" in col and self.vy >= 0:
+                    self.vy = 0
+                    c = False
+                    if self.do[0] != "moveright" and self.do[0] != "moveleft":
+                        self.vx = 0
+                elif "y-" in col and self.vy <= 0:
+                    self.vy = 0
+            if c:
+                self.status_set("jump", True)
+            else:
+                self.status_set("jump", False)
+            self.x = self.x + self.vx
+            if self.do[0] == "jump":
+                self.y = self.y + self.vy
+                self.vy = self.vy + 0.5
+                screen.blit(self.image, (self.x - x, self.y - y))
+            elif self.do[0] == "moveright":
+                self.runright.framedraw(screen, self.x - x, self.y - y)
+            elif self.do[0] == "moveleft":
+                self.runleft.framedraw(screen, self.x - x, self.y - y)
+            else:
+                screen.blit(self.image, (self.x - x, self.y - y))
+            pygame.draw.rect(screen, (0, 100, 100), (0, 0, self.sizeinventarx, self.sizeinventary))
+            sizey = self.sizeinventary // len(self.inventar)
+            sizex = self.sizeinventarx // len(self.inventar[0])
+            for i in range(len(self.inventar)):
+                for j in range(len(self.inventar[0])):
+                    pygame.draw.rect(screen, (0, 0, 0), (j * sizex + 1, i * sizey + 1, sizex - 2, sizey - 2))
+                    if self.inventar[i][j] == "":
+                        pass
+                    else:
+                        self.inventar[i][j].display_into_inventar(screen, j * sizex + 1, i * sizey + 1, sizex , sizey)
+            pygame.draw.rect(screen, (255, 255, 255), (750, 20, self.hp // 2, 10))
+            pygame.draw.rect(screen, (0, 100, 100), (747, 17, 206, 16), 1)
 
     def move(self, side):
         if side:
@@ -225,7 +241,18 @@ class Person:
     def data_return(self):
         #вернуть данные для сохранения
         return "Person" + " " + str(len(self.inventar)) + " " + str(len(self.inventar[0])) + " " + str(self.x) + " " +\
-            str(self.y)
+            str(self.y) + " " + str(self.hp)
+
+    def respawn(self):
+        self.status_set("dead", False)
+        self.x = 0
+        self.vx = 0
+        self.vy = 0
+        self.y = -200
+        for i in range(len(self.inventar)):
+            for j in range(len(self.inventar[i])):
+                self.inventar[i][j] = ""
+        self.hp = 50
 
 
 class Collision_reactangle:

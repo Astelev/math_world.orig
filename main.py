@@ -4,11 +4,12 @@ import sys
 from utilits import World, Person, load_image, Anim, Collision_reactangle, Button, Text
 from objects import Number
 from mobs import Physical_object
+import random
 
 pygame.init()
 
 def startscreen(screen, clock, massag=""):
-    #функция меню, возвращает список данных о начале игры [начать(True, False), загрузить или новая игра, номер слота для сохранения]
+    #функция меню, возвращает список данных о начале игры [начать(True, False), загрузить или новая игра(True, False), номер слота для сохранения]
     QUIT = Button(100, 300, "QUIT")
     nuw = Button(100, 100, "new game")
     load = Button(100, 200, "load game")
@@ -99,6 +100,7 @@ def open_all(world, slot):
                 world.create_object(Person(int(obj[1]), int(obj[2])))
                 world.col[-1].x = float(obj[3])
                 world.col[-1].y = float(obj[4])
+                world.col[-1].hp = int(obj[5])
             elif obj[0] == "Number":
                 world.create_object(Number(int(obj[1]), float(obj[2]), float(obj[3])))
         f.close()
@@ -106,8 +108,21 @@ def open_all(world, slot):
     except:
         return False
 
-
-
+def deadscreen(screen, clock):
+    text = Text(400, 200, "you are dead!")
+    out = Button(400, 300, "go to menu")
+    while True:
+        text.display(screen)
+        out.display(screen)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if out.check(x, y):
+                    return True
+        pygame.display.flip()
+        clock.tick(100)
 
 if __name__ == '__main__':
     # инициализация Pygame:
@@ -146,24 +161,26 @@ if __name__ == '__main__':
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
-                    if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.type == pygame.MOUSEBUTTONDOWN and person.do[0] != "dead":
                         flag = True
                         if x < person.sizeinventarx and y < person.sizeinventary:
                             returnd = person.get_it(x, y)
                             if returnd:
                                 world.create_object(returnd)
-                    if event.type == pygame.MOUSEBUTTONUP:
+                    if event.type == pygame.MOUSEBUTTONUP :
                         flag = False
                         if returnd and x < person.sizeinventarx and y < person.sizeinventary:
                             if person.put(x, y, returnd):
                                 world.del_object(world.col.index(returnd))
-                    if event.type == pygame.KEYDOWN:
+                    if event.type == pygame.KEYDOWN and person.do[0] != "dead":
                         if event.key == 32:
                             person.jump()
+                        elif event.key == pygame.K_b:
+                            person.damag(390)
                 if not flag and returnd:
                     returnd.status_set("move", False)
                     returnd = False
-                elif flag:
+                elif flag and person.do[0] != "dead":
                     returnd = world.click(x, y)
                     if returnd:
                         if returnd.movable:
@@ -171,21 +188,26 @@ if __name__ == '__main__':
                             returnd.status_set("move", True)
                 world.display()
                 keys = pygame.key.get_pressed()
-                if keys[pygame.K_a]:
-                    person.move(False)
-                    if person.do[0] != "jump":
-                        person.status_set("moveleft")
-                elif keys[pygame.K_d]:
-                    person.move(True)
-                    if person.do[0] != "jump":
-                        person.status_set("moveright")
+                if person.do[0] != "dead":
+                    if keys[pygame.K_a] :
+                        person.move(False)
+                        if person.do[0] != "jump":
+                            person.status_set("moveleft")
+                    elif keys[pygame.K_d]:
+                        person.move(True)
+                        if person.do[0] != "jump":
+                            person.status_set("moveright")
+                    else:
+                        person.status_set("moveleft", False)
+                        person.status_set("moveright", False)
+                    if keys[pygame.K_ESCAPE]:
+                        if not pausmenu(screen, clock):
+                            save_all(world, str(slot))
+                            break
+                elif deadscreen(screen, clock):
+                    break
                 else:
-                    person.status_set("moveleft", False)
-                    person.status_set("moveright", False)
-                if keys[pygame.K_ESCAPE]:
-                    if not pausmenu(screen, clock):
-                        save_all(world, str(slot))
-                        break
+                    running = False
                 pygame.display.flip()
                 clock.tick(100)
             if not running:

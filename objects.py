@@ -36,3 +36,4 @@ class Number:
 
     def data_return(self):
         return "Number" + " " + str(self.c) + " " + str(self.x) + " " + str(self.y)
+
