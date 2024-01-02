@@ -2,7 +2,7 @@ import pygame
 import os
 import sys
 from utilits import World, Person, load_image, Anim, Collision_reactangle, Button, Text
-from objects import Number
+from objects import Number, Example_sword
 from mobs import Enemy
 import random
 
@@ -107,6 +107,8 @@ def open_all(world, slot):
                 person = world.return_obj(name="person")
                 world.create_object(Enemy(float(obj[1]), float(obj[2]), person))
                 world.col[-1].hp = int(obj[3])
+            elif obj[0] == "Sword":
+                world.create_object(Example_sword(float(obj[1]), float(obj[2])))
         f.close()
         return True
     except:
@@ -147,6 +149,7 @@ if __name__ == '__main__':
                 world.create_object(Number(10, 10, -30))
                 world.create_object(Number(10, 10, -20))
                 world.create_object(Enemy(900, -300, person))
+                world.create_object(Example_sword(200, -300))
                 slot = startparam[2]
             else:
                 slot = startparam[2]
@@ -179,7 +182,7 @@ if __name__ == '__main__':
                         elif returnd:
                             if returnd.damageble:
                                 person.attack(returnd)
-                    if event.type == pygame.MOUSEBUTTONUP :
+                    if event.type == pygame.MOUSEBUTTONUP:
                         flag = False
                         if returnd and x < person.sizeinventarx and y < person.sizeinventary:
                             if person.put(x, y, returnd):
@@ -187,8 +190,8 @@ if __name__ == '__main__':
                     if event.type == pygame.KEYDOWN and person.do[0] != "dead":
                         if event.key == 32:
                             person.jump()
-                        elif event.key == pygame.K_b:
-                            person.damag(390)
+                        elif 48 < event.key < 58:
+                            person.choose(event.key - 49)
                 if person.do[0] != "dead":
                     if flag:
                         if returnd:

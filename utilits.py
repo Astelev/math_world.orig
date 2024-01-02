@@ -1,7 +1,6 @@
 import pygame
 import os
 import sys
-import objects
 import random
 
 def load_image(name):
@@ -140,11 +139,16 @@ class Person:
         self.hp = 400
         self.movable = False
         self.damageble = False
+        self.use = False
+        self.usenum = 0
 
     def attack(self, enemy):
         self.status_set("attack", True)
         if self.do[1] == 0:
-            enemy.damag(10)
+            if self.use:
+                enemy.damag(self.use.damage)
+            else:
+                enemy.damag(5)
             self.do[1] = 20
 
     def damag(self, level):
@@ -214,6 +218,8 @@ class Person:
                         pass
                     else:
                         self.inventar[i][j].display_into_inventar(screen, j * sizex + 1, i * sizey + 1, sizex , sizey)
+            if self.usenum:
+                pygame.draw.rect(screen, (100, 100, 100), ((self.usenum - 1 ) * sizex, 0, sizex, sizey), 3)
             pygame.draw.rect(screen, (255, 255, 255), (750, 20, self.hp // 2, 10))
             pygame.draw.rect(screen, (0, 100, 100), (747, 17, 206, 16), 1)
 
@@ -269,6 +275,17 @@ class Person:
             for j in range(len(self.inventar[i])):
                 self.inventar[i][j] = ""
         self.hp = 50
+
+    def choose(self, num):
+        if num + 1 != self.usenum:
+            choos = self.inventar[0][num]
+            if choos:
+                if choos.usable:
+                    self.use = choos
+                    self.usenum = num + 1
+        else:
+            self.usenum = 0
+            self.use = False
 
 
 class Collision_reactangle:
