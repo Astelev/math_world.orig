@@ -3,8 +3,6 @@ import os
 import sys
 import objects
 
-pygame.init()
-
 def load_image(name):
     fullname = os.path.join('data', name)
     if not os.path.isfile(fullname):
@@ -14,6 +12,7 @@ def load_image(name):
     return image
 
 class Button:
+    # класс кнопки,
     def __init__(self, x, y, text, size=50):
         font = pygame.font.Font(None, size)
         self.text = font.render(text, True, (10, 100, 100))
@@ -34,8 +33,26 @@ class Button:
             return False
 
 
+class Text:
+    def __init__(self, x, y, text, size=50):
+        font = pygame.font.Font(None, size)
+        self.text = font.render(text, True, (10, 100, 100))
+        self.x = x
+        self.y = y
+        self.w = self.text.get_width()
+        self.h = self.text.get_height()
+        self.visible = True
+    def display(self, screen):
+        if self.visible:
+            screen.blit(self.text, (self.x, self.y))
+
+    def set_visible(self, visible):
+        self.visible = visible
+
+
 
 class Anim:
+    #класс анимаций. экзепляр хранит в себе анимацию.
     def __init__(self, filename, frames):
         self.images = []
         for i in range(frames):
@@ -44,6 +61,7 @@ class Anim:
         self.nowframe = 0
 
     def framedraw(self, screen, x, y):
+        #отрисовывает кадр на координатах
         screen.blit(self.images[self.nowframe], (x, y))
         if self.nowframe < len(self.images) - 1:
             self.nowframe += 1
@@ -60,8 +78,7 @@ class World:
         self.col = objects
         self.collisions = []
         self.scr = screen
-        # обьект к которому будет прикреплена камера
-        self.camera_binding = "person"
+        self.camera_binding = "person" # обьект к которому будет прикреплена камера
 
     def create_object(self, object):
         self.col.append(object)
@@ -87,6 +104,7 @@ class World:
                     return i
 
     def del_object(self, i):
+        #удаляет обьект с номером i
         self.col.pop(i)
 
     def click(self, x, y):
@@ -98,6 +116,7 @@ class World:
 
 
 class Person:
+    #класс персонажа
     def __init__(self, row, col, x=0, y=-200, size=109, name="person"):
         # загрузка анимаций
         self.image = load_image("person.png")
@@ -177,6 +196,7 @@ class Person:
             self.vy = self.vy - 15
 
     def put(self, xmous, ymous, object):
+        #положить обьект в инвентарь.
         sizey = self.sizeinventary // len(self.inventar)
         sizex = self.sizeinventarx // len(self.inventar[0])
         row = ymous // sizey
@@ -188,6 +208,7 @@ class Person:
             return False
 
     def get_it(self, xmous, ymous):
+        #достать обьект из инвентаря.
         sizey = self.sizeinventary // len(self.inventar)
         sizex = self.sizeinventarx // len(self.inventar[0])
         row = ymous // sizey
@@ -202,6 +223,7 @@ class Person:
             return False
 
     def data_return(self):
+        #вернуть данные для сохранения
         return "Person" + " " + str(len(self.inventar)) + " " + str(len(self.inventar[0])) + " " + str(self.x) + " " +\
             str(self.y)
 
@@ -237,58 +259,3 @@ class Collision_reactangle:
     def display(self, x, y, screen, color):
         #отображение
         pygame.draw.rect(screen, color, (self.x - x, self.y - y, self.sizex, self.sizey))
-
-class Physical_object:
-    def __init__(self, size=109, name=""):
-        # загрузка анимаций
-        self.image = load_image("person.png")
-        self.runright = Anim("runright", 2)
-        self.runleft = Anim("runleft", 2)
-        self.name = name
-        self.x = 0
-        self.vx = 0
-        self.vy = 0
-        self.y = -200
-        self.sizey = size
-        self.sizex = 50
-        self.do = ["", 0]
-
-    def status_set(self, do, status=True):
-        # задать статус для анимаций, во время полёта статус автоматически "Jump"
-        if status:
-            self.do[0] = do
-        elif self.do[0] == do and not status:
-            self.do[0] = ""
-            self.do[1] = 0
-
-    def display(self, x, y, screen, collision):
-        #отображение и просчёт движения
-        c = True
-        for i in collision:
-            col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-            if "x+" in col and self.vx >= 0:
-                self.vx = 0
-            elif "x-" in col and self.vx <= 0:
-                self.vx = 0
-            if "y+" in col and self.vy >= 0:
-                self.vy = 0
-                c = False
-                if self.do[0] != "moveright" and self.do[0] != "moveleft":
-                    self.vx = 0
-            elif "y-" in col and self.vy <= 0:
-                self.vy = 0
-        if c:
-            self.status_set("jump", True)
-        else:
-            self.status_set("jump", False)
-        self.x = self.x + self.vx
-        if self.do[0] == "jump":
-            self.y = self.y + self.vy
-            self.vy = self.vy + 0.5
-            screen.blit(self.image, (self.x - x, self.y - y))
-        elif self.do[0] == "moveright":
-            self.runright.framedraw(screen, self.x - x, self.y - y)
-        elif self.do[0] == "moveleft":
-            self.runleft.framedraw(screen, self.x - x, self.y - y)
-        else:
-            screen.blit(self.image, (self.x - x, self.y - y))

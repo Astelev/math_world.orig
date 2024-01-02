@@ -1,12 +1,14 @@
 import pygame
 import os
 import sys
-from utilits import World, Person, load_image, Anim, Collision_reactangle, Physical_object, Button
+from utilits import World, Person, load_image, Anim, Collision_reactangle, Button, Text
 from objects import Number
+from mobs import Physical_object
 
 pygame.init()
 
-def startscreen(screen, clock):
+def startscreen(screen, clock, massag=""):
+    #функция меню, возвращает список данных о начале игры [начать(True, False), загрузить или новая игра, номер слота для сохранения]
     QUIT = Button(100, 300, "QUIT")
     nuw = Button(100, 100, "new game")
     load = Button(100, 200, "load game")
@@ -14,9 +16,13 @@ def startscreen(screen, clock):
     slot2 = Button(200, 100, "2")
     slot3 = Button(300, 100, "3")
     back = Button(100, 200, "back")
+    massage = Text(400, 100, massag)
+    if massage == "":
+        massage.set_visible(False)
     meny = 0
     while True:
         screen.fill((0, 0, 0))
+        massage.display(screen)
         if meny == 0:
             nuw.display(screen)
             load.display(screen)
@@ -37,19 +43,19 @@ def startscreen(screen, clock):
                     meny = 2
                 if slot1.check(x, y):
                     if meny == 1:
-                        return [True, "nuw", 1]
+                        return [True, True, 1]
                     elif meny == 2:
-                        return [True, "old", 1]
+                        return [True, False, 1]
                 if slot2.check(x, y):
                     if meny == 1:
-                        return [True, "nuw", 2]
+                        return [True, True, 2]
                     elif meny == 2:
-                        return [True, "old", 2]
+                        return [True, False, 2]
                 if slot3.check(x, y):
                     if meny == 1:
-                        return [True, "nuw", 3]
+                        return [True, True, 3]
                     elif meny == 2:
-                        return [True, "old", 3]
+                        return [True, False, 3]
                 if QUIT.check(x, y) and meny == 0:
                     return [False]
                 if back.check(x, y) and (meny == 1 or meny == 2):
@@ -58,6 +64,7 @@ def startscreen(screen, clock):
         clock.tick(100)
 
 def pausmenu(screen, clock):
+    #функция паузы
     cont = Button(400, 200, "continue")
     out = Button(400, 300, "go to menu")
     while True:
@@ -76,22 +83,28 @@ def pausmenu(screen, clock):
         clock.tick(100)
 
 def save_all(world, slot):
+    # сохранить текущую игру в слот
     f = open('savefiles\save' + slot +'.txt', 'w')
     for i in world.col:
         f.write(i.data_return() + "\n")
     f.close()
 
 def open_all(world, slot):
-    f = open('savefiles\save' + slot +'.txt', 'r')
-    for line in f:
-        obj = line.split()
-        if obj[0] == "Person":
-            world.create_object(Person(int(obj[1]), int(obj[2])))
-            world.col[-1].x = float(obj[3])
-            world.col[-1].y = float(obj[4])
-        elif obj[0] == "Number":
-            world.create_object(Number(int(obj[1]), float(obj[2]), float(obj[3])))
-    f.close()
+    #загрузить игру из слота
+    try:
+        f = open('savefiles\save' + slot +'.txt', 'r')
+        for line in f:
+            obj = line.split()
+            if obj[0] == "Person":
+                world.create_object(Person(int(obj[1]), int(obj[2])))
+                world.col[-1].x = float(obj[3])
+                world.col[-1].y = float(obj[4])
+            elif obj[0] == "Number":
+                world.create_object(Number(int(obj[1]), float(obj[2]), float(obj[3])))
+        f.close()
+        return True
+    except:
+        return False
 
 
 
@@ -101,21 +114,26 @@ if __name__ == '__main__':
     size = 1000, 800
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
+    running = True
+    massage = ""
     while True:
-        running = True
-        startparam = startscreen(screen, clock)
+        startparam = startscreen(screen, clock, massage)
         if startparam[0]:
             world = World(0, 0, screen)
             world.col = []
             world.collisions = []
-            if startparam[1] == "nuw":
+            if startparam[1]:
                 world.create_object(Person(3, 10))
                 world.create_object(Number(10, 10, -30))
                 world.create_object(Number(10, 10, -20))
                 slot = startparam[2]
-            elif startparam[1] == "old":
+            else:
                 slot = startparam[2]
-                open_all(world, str(slot))
+                r = open_all(world, str(slot))
+                if not r:
+                    massage = "Error: save not found"
+                    continue
+            massage = ""
             world.create_collision(Collision_reactangle(-1000, 10, 2000, 1000))
             world.create_collision(Collision_reactangle(-500, -100, 200, 100))
             world.create_collision(Collision_reactangle(100, -200, 300, 50))
@@ -123,6 +141,7 @@ if __name__ == '__main__':
             flag = False # храниет в себе нажата ли кнопка мыши
             returnd = False # хранит в себе обьект на который было проиведено нажатие
             while running:
+                #цикл игры, если прервать break то переходит в меню, если прервать с помощью running = False выходит из программы
                 x, y = pygame.mouse.get_pos()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -133,7 +152,6 @@ if __name__ == '__main__':
                             returnd = person.get_it(x, y)
                             if returnd:
                                 world.create_object(returnd)
-
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False
                         if returnd and x < person.sizeinventarx and y < person.sizeinventary:
