@@ -41,6 +41,7 @@ class Number:
     def data_return(self):
         return "Number" + " " + str(self.c) + " " + str(self.x) + " " + str(self.y)
 
+
 class Example_sword:
     def __init__(self, x, y, size=40, name="sword"):
         self.name = name

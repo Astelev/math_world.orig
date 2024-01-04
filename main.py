@@ -8,8 +8,9 @@ import random
 
 pygame.init()
 
+
 def startscreen(screen, clock, massag=""):
-    #функция меню, возвращает список данных о начале игры [начать(True, False), загрузить или новая игра(True, False), номер слота для сохранения]
+    # функция меню, возвращает список данных о начале игры [начать(True, False), загрузить или новая игра(True, False), номер слота для сохранения]
     QUIT = Button(100, 300, "QUIT")
     nuw = Button(100, 100, "new game")
     load = Button(100, 200, "load game")
@@ -64,8 +65,9 @@ def startscreen(screen, clock, massag=""):
         pygame.display.flip()
         clock.tick(100)
 
+
 def pausmenu(screen, clock):
-    #функция паузы
+    # функция паузы
     cont = Button(400, 200, "continue")
     out = Button(400, 300, "go to menu")
     while True:
@@ -83,17 +85,19 @@ def pausmenu(screen, clock):
         pygame.display.flip()
         clock.tick(100)
 
+
 def save_all(world, slot):
     # сохранить текущую игру в слот
-    f = open('savefiles\save' + slot +'.txt', 'w')
+    f = open('savefiles\save' + slot + '.txt', 'w')
     for i in world.col:
         f.write(i.data_return() + "\n")
     f.close()
 
+
 def open_all(world, slot):
-    #загрузить игру из слота
+    # загрузить игру из слота
     try:
-        f = open('savefiles\save' + slot +'.txt', 'r')
+        f = open('savefiles\save' + slot + '.txt', 'r')
         for line in f:
             obj = line.split()
             if obj[0] == "Person":
@@ -114,6 +118,7 @@ def open_all(world, slot):
     except:
         return False
 
+
 def deadscreen(screen, clock):
     text = Text(400, 200, "you are dead!")
     out = Button(400, 300, "go to menu")
@@ -129,6 +134,7 @@ def deadscreen(screen, clock):
                     return True
         pygame.display.flip()
         clock.tick(100)
+
 
 if __name__ == '__main__':
     # инициализация Pygame:
@@ -161,13 +167,13 @@ if __name__ == '__main__':
             world.create_collision(Collision_reactangle(-1000, 10, 2000, 1000))
             world.create_collision(Collision_reactangle(-500, -100, 200, 100))
             world.create_collision(Collision_reactangle(100, -200, 300, 50))
-            person = world.return_obj("person") # ссылается на персонажа
-            flag = False # храниет в себе нажата ли кнопка мыши
-            returnd = False # хранит в себе обьект на который было проиведено нажатие
+            person = world.return_obj("person")  # ссылается на персонажа
+            flag = False  # храниет в себе нажата ли кнопка мыши
+            returnd = False  # хранит в себе обьект на который было проиведено нажатие
             while running:
-                #цикл игры, если прервать break то переходит в меню, если прервать с помощью running = False выходит из программы
+                # цикл игры, если прервать break то переходит в меню, если прервать с помощью running = False выходит из программы
                 x, y = pygame.mouse.get_pos()
-                if not flag and returnd: # если до этого был обьект который мы двигали а сейчас отпустили убирает у него статус двигается
+                if not flag and returnd:  # если до этого был обьект который мы двигали а сейчас отпустили убирает у него статус двигается
                     returnd.status_set("move", False)
                 returnd = world.click(x, y)
                 for event in pygame.event.get():
@@ -200,7 +206,7 @@ if __name__ == '__main__':
                     if person.y > 10000:
                         person.status_set("dead", True)
                     keys = pygame.key.get_pressed()
-                    if keys[pygame.K_a] :
+                    if keys[pygame.K_a]:
                         person.move(False)
                         if person.do[0] != "jump":
                             person.status_set("moveleft")

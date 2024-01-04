@@ -3,7 +3,7 @@ from utilits import load_image, Anim
 
 
 class Enemy:
-    def __init__(self,x, y, person, size=50, name="enemy"):
+    def __init__(self, x, y, person, size=50, name="enemy"):
         # загрузка анимаций
         self.image = load_image("enemy.png")
         self.runright = Anim("runright_enemy", 1)
@@ -31,7 +31,7 @@ class Enemy:
             self.do[1] = 0
 
     def display(self, x, y, screen, collision):
-        #отображение и просчёт движения
+        # отображение и просчёт движения
         if self.do[0] != "dead":
             if abs(self.person.x - self.x) < 1000:
                 self.agr()
@@ -94,5 +94,5 @@ class Enemy:
             self.status_set("dead", True)
 
     def data_return(self):
-        return "Enemy" + " " + str(self.x) + " " +\
+        return "Enemy" + " " + str(self.x) + " " + \
             str(self.y) + " " + str(self.hp)

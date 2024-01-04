@@ -3,6 +3,7 @@ import os
 import sys
 import random
 
+
 def load_image(name):
     fullname = os.path.join('data', name)
     if not os.path.isfile(fullname):
@@ -10,6 +11,7 @@ def load_image(name):
         sys.exit()
     image = pygame.image.load(fullname)
     return image
+
 
 class Button:
     # класс кнопки,
@@ -21,11 +23,11 @@ class Button:
         self.w = self.text.get_width()
         self.h = self.text.get_height()
 
-
     def display(self, screen):
         screen.blit(self.text, (self.x, self.y))
         pygame.draw.rect(screen, (10, 100, 100), (self.x - 10, self.y - 10,
-                                               self.w + 20, self.h + 20), 1)
+                                                  self.w + 20, self.h + 20), 1)
+
     def check(self, x, y):
         if self.x < x < self.x + self.w and self.y < y < self.y + self.h:
             return True
@@ -42,6 +44,7 @@ class Text:
         self.w = self.text.get_width()
         self.h = self.text.get_height()
         self.visible = True
+
     def display(self, screen):
         if self.visible:
             screen.blit(self.text, (self.x, self.y))
@@ -50,9 +53,8 @@ class Text:
         self.visible = visible
 
 
-
 class Anim:
-    #класс анимаций. экзепляр хранит в себе анимацию.
+    # класс анимаций. экзепляр хранит в себе анимацию.
     def __init__(self, filename, frames):
         self.images = []
         for i in range(frames):
@@ -61,7 +63,7 @@ class Anim:
         self.nowframe = 0
 
     def framedraw(self, screen, x, y):
-        #отрисовывает кадр на координатах
+        # отрисовывает кадр на координатах
         screen.blit(self.images[self.nowframe], (x, y))
         if self.nowframe < len(self.images) - 1:
             self.nowframe += 1
@@ -78,7 +80,7 @@ class World:
         self.col = objects
         self.collisions = []
         self.scr = screen
-        self.camera_binding = "person" # обьект к которому будет прикреплена камера
+        self.camera_binding = "person"  # обьект к которому будет прикреплена камера
 
     def create_object(self, object):
         self.col.append(object)
@@ -87,7 +89,7 @@ class World:
         self.collisions.append(object)
 
     def display(self):
-        #отображение обьектов и колизий
+        # отображение обьектов и колизий
         self.scr.fill(self.backcol)
         self.camx = self.return_obj(self.camera_binding).x - 400
         self.camy = self.return_obj(self.camera_binding).y - 510
@@ -99,18 +101,18 @@ class World:
             i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
 
     def return_obj(self, name="", number=-1):
-        #возвращает обьект с именем или с индексом
+        # возвращает обьект с именем или с индексом
         if name != "":
             for i in self.col:
                 if i.name == name:
                     return i
 
     def del_object(self, i):
-        #удаляет обьект с номером i
+        # удаляет обьект с номером i
         self.col.pop(i)
 
     def click(self, x, y):
-        #возвращает обьект на координатах x, y, eсли обьекта нет то возвращает False
+        # возвращает обьект на координатах x, y, eсли обьекта нет то возвращает False
         for i in self.col:
             if i.x < x + self.camx < i.x + i.sizex and i.y < y + self.camy < i.y + i.sizey:
                 return i
@@ -118,7 +120,7 @@ class World:
 
 
 class Person:
-    #класс персонажа
+    # класс персонажа
     def __init__(self, row, col, x=0, y=-200, size=109, name="person"):
         # загрузка анимаций
         self.image = load_image("person.png")
@@ -156,7 +158,7 @@ class Person:
         if self.hp <= 0:
             self.status_set("dead", True)
 
-    def hill(self, level):
+    def heal(self, level):
         if self.hp < 400:
             self.hp += level
 
@@ -169,10 +171,10 @@ class Person:
             self.do[1] = 0
 
     def display(self, x, y, screen, collision):
-        #отображение и просчёт движения
+        # отображение и просчёт движения
         if self.do[0] != "dead":
-            if random.randint(0,1):
-                self.hill(random.randint(0,1))
+            if random.randint(0, 1):
+                self.heal(random.randint(0, 1))
             c = True
             for i in collision:
                 col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
@@ -217,9 +219,9 @@ class Person:
                     if self.inventar[i][j] == "":
                         pass
                     else:
-                        self.inventar[i][j].display_into_inventar(screen, j * sizex + 1, i * sizey + 1, sizex , sizey)
+                        self.inventar[i][j].display_into_inventar(screen, j * sizex + 1, i * sizey + 1, sizex, sizey)
             if self.usenum:
-                pygame.draw.rect(screen, (100, 100, 100), ((self.usenum - 1 ) * sizex, 0, sizex, sizey), 3)
+                pygame.draw.rect(screen, (100, 100, 100), ((self.usenum - 1) * sizex, 0, sizex, sizey), 3)
             pygame.draw.rect(screen, (255, 255, 255), (750, 20, self.hp // 2, 10))
             pygame.draw.rect(screen, (0, 100, 100), (747, 17, 206, 16), 1)
 
@@ -234,7 +236,7 @@ class Person:
             self.vy = self.vy - 15
 
     def put(self, xmous, ymous, object):
-        #положить обьект в инвентарь.
+        # положить обьект в инвентарь.
         sizey = self.sizeinventary // len(self.inventar)
         sizex = self.sizeinventarx // len(self.inventar[0])
         row = ymous // sizey
@@ -246,7 +248,7 @@ class Person:
             return False
 
     def get_it(self, xmous, ymous):
-        #достать обьект из инвентаря.
+        # достать обьект из инвентаря.
         sizey = self.sizeinventary // len(self.inventar)
         sizex = self.sizeinventarx // len(self.inventar[0])
         row = ymous // sizey
@@ -261,8 +263,8 @@ class Person:
             return False
 
     def data_return(self):
-        #вернуть данные для сохранения
-        return "Person" + " " + str(len(self.inventar)) + " " + str(len(self.inventar[0])) + " " + str(self.x) + " " +\
+        # вернуть данные для сохранения
+        return "Person" + " " + str(len(self.inventar)) + " " + str(len(self.inventar[0])) + " " + str(self.x) + " " + \
             str(self.y) + " " + str(self.hp)
 
     def respawn(self):
@@ -296,11 +298,11 @@ class Collision_reactangle:
         self.sizey = sizey
 
     def collision_chek(self, x, y, sizex, sizey):
-        #проверка на столкновение с колизией
-        #возвращает тип столкновение y+ - столкновение по y с верху
-        #y- столкновение по y с низу
-        #x+ столкновение по x слева
-        #x- столкновение по x cправа
+        # проверка на столкновение с колизией
+        # возвращает тип столкновение y+ - столкновение по y с верху
+        # y- столкновение по y с низу
+        # x+ столкновение по x слева
+        # x- столкновение по x cправа
         result = []
         if self.x + self.sizex > x and self.x < x + sizex and self.y + self.sizey + 20 > y and self.y - 20 < y + sizey:
             if self.y >= y:
@@ -317,5 +319,5 @@ class Collision_reactangle:
         return result
 
     def display(self, x, y, screen, color):
-        #отображение
+        # отображение
         pygame.draw.rect(screen, color, (self.x - x, self.y - y, self.sizex, self.sizey))
