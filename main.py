@@ -121,6 +121,17 @@ def open_all(world, slot):
     except:
         return False
 
+def random_generation(world):
+    cellx = 700
+    celly = 300
+    for i in range(20):
+        for j in range(30):
+            random.seed(i * j * world.seed)
+            x = random.randint(0, cellx)
+            random.seed(i * j * world.seed)
+            y = random.randint(0, celly - 150)
+            world.create_collision(
+                Collision_reactangle(-15 * cellx + j * cellx + x, -200 - i * celly - y, 500, 50))
 
 def deadscreen(screen, clock):
     text = Text(400, 200, "you are dead!")
@@ -155,8 +166,6 @@ if __name__ == '__main__':
             world.create_collision(Collision_reactangle(-100000, 10, 200000, 1000))
             world.create_collision(Collision_reactangle(-500, -100, 200, 100))
             world.create_collision(Collision_reactangle(100, -200, 300, 50))
-            cellx = 700
-            celly = 300
             if startparam[1]:
                 person = Person(3, 10)
                 world.create_object(person)
@@ -172,15 +181,8 @@ if __name__ == '__main__':
                 if not r:
                     massage = "Error: save not found"
                     continue
-            for i in range(20):
-                for j in range(30):
-                    random.seed(i*j*world.seed)
-                    x = random.randint(0, cellx)
-                    random.seed(i * j * world.seed)
-                    y = random.randint(0, celly - 150)
-                    world.create_collision(
-                        Collision_reactangle(-15 * cellx + j * cellx + x, -200 - i * celly - y, 500, 50))
             massage = ""
+            random_generation(world)
             person = world.return_obj("person")  # ссылается на персонажа
             flag = False  # храниет в себе нажата ли кнопка мыши
             returnd = False  # хранит в себе обьект на который было проиведено нажатие
