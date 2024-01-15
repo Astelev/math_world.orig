@@ -73,6 +73,7 @@ class Anim:
 
 class World:
     def __init__(self, camerax, cameray, screen, objects=[], florcol=(100, 100, 100), backcol=(0, 0, 0)):
+        self.seed = 0
         self.florcol = florcol
         self.backcol = backcol
         self.camx = camerax
@@ -93,12 +94,12 @@ class World:
         self.scr.fill(self.backcol)
         self.camx = self.return_obj(self.camera_binding).x - 400
         self.camy = self.return_obj(self.camera_binding).y - 510
+        for i in self.collisions:
+            i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
         for i in self.col:
             i.display(int(self.camx), int(self.camy), self.scr, self.collisions)
             if i.do[0] == "dead":
                 self.del_object(self.col.index(i))
-        for i in self.collisions:
-            i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
 
     def return_obj(self, name="", number=-1):
         # возвращает обьект с именем или с индексом
@@ -233,7 +234,7 @@ class Person:
 
     def jump(self):
         if self.do[0] != "jump":
-            self.vy = self.vy - 15
+            self.vy = self.vy - 17
 
     def put(self, xmous, ymous, object):
         # положить обьект в инвентарь.
@@ -319,5 +320,9 @@ class Collision_reactangle:
         return result
 
     def display(self, x, y, screen, color):
+        r, g, b = color
+        r = int(r - self.y * 0.01) % 255
+        g = int(g - self.y * 0.01) % 255
+        b = int(b - self.y * 0.01) % 255
         # отображение
-        pygame.draw.rect(screen, color, (self.x - x, self.y - y, self.sizex, self.sizey))
+        pygame.draw.rect(screen, (r, g, b), (self.x - x, self.y - y, self.sizex, self.sizey))

@@ -1,5 +1,4 @@
-Person 3 10 -125 -114.5 400
-Number 10 10 -30
+seed -510401
+Person 3 10 -145 -112.5 400
+Number 10 -60 -139.5
 Number 10 10 -20
-Enemy 246 -52.0 100
-Sword 200 -300

@@ -89,6 +89,7 @@ def pausmenu(screen, clock):
 def save_all(world, slot):
     # сохранить текущую игру в слот
     f = open('savefiles\save' + slot + '.txt', 'w')
+    f.write("seed " + str(world.seed) + "\n")
     for i in world.col:
         f.write(i.data_return() + "\n")
     f.close()
@@ -100,7 +101,9 @@ def open_all(world, slot):
         f = open('savefiles\save' + slot + '.txt', 'r')
         for line in f:
             obj = line.split()
-            if obj[0] == "Person":
+            if obj[0] == "seed":
+                world.seed = obj[1]
+            elif obj[0] == "Person":
                 world.create_object(Person(int(obj[1]), int(obj[2])))
                 world.col[-1].x = float(obj[3])
                 world.col[-1].y = float(obj[4])
@@ -149,6 +152,11 @@ if __name__ == '__main__':
             world = World(0, 0, screen)
             world.col = []
             world.collisions = []
+            world.create_collision(Collision_reactangle(-100000, 10, 200000, 1000))
+            world.create_collision(Collision_reactangle(-500, -100, 200, 100))
+            world.create_collision(Collision_reactangle(100, -200, 300, 50))
+            cellx = 700
+            celly = 300
             if startparam[1]:
                 person = Person(3, 10)
                 world.create_object(person)
@@ -157,16 +165,22 @@ if __name__ == '__main__':
                 world.create_object(Enemy(900, -300, person))
                 world.create_object(Example_sword(200, -300))
                 slot = startparam[2]
+                world.seed = random.randint(-1000000, 1000000)
             else:
                 slot = startparam[2]
                 r = open_all(world, str(slot))
                 if not r:
                     massage = "Error: save not found"
                     continue
+            for i in range(20):
+                for j in range(30):
+                    random.seed(i*j*world.seed)
+                    x = random.randint(0, cellx)
+                    random.seed(i * j * world.seed)
+                    y = random.randint(0, celly - 150)
+                    world.create_collision(
+                        Collision_reactangle(-15 * cellx + j * cellx + x, -200 - i * celly - y, 500, 50))
             massage = ""
-            world.create_collision(Collision_reactangle(-1000, 10, 2000, 1000))
-            world.create_collision(Collision_reactangle(-500, -100, 200, 100))
-            world.create_collision(Collision_reactangle(100, -200, 300, 50))
             person = world.return_obj("person")  # ссылается на персонажа
             flag = False  # храниет в себе нажата ли кнопка мыши
             returnd = False  # хранит в себе обьект на который было проиведено нажатие
