@@ -91,7 +91,11 @@ class World:
 
     def display(self):
         # отображение обьектов и колизий
-        self.scr.fill(self.backcol)
+        r, g, b = self.backcol
+        g = int(g - self.camy * 0.01) % 255
+        g = int(g - self.camy * 0.01) % 255
+        b = int(b - self.camy * 0.02) % 255
+        self.scr.fill((r, g, b))
         self.camx = self.return_obj(self.camera_binding).x - 400
         self.camy = self.return_obj(self.camera_binding).y - 510
         for i in self.collisions:
@@ -323,6 +327,5 @@ class Collision_reactangle:
         r, g, b = color
         r = int(r - self.y * 0.01) % 255
         g = int(g - self.y * 0.01) % 255
-        b = int(b - self.y * 0.01) % 255
         # отображение
         pygame.draw.rect(screen, (r, g, b), (self.x - x, self.y - y, self.sizex, self.sizey))

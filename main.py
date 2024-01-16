@@ -91,7 +91,19 @@ def save_all(world, slot):
     f = open('savefiles\save' + slot + '.txt', 'w')
     f.write("seed " + str(world.seed) + "\n")
     for i in world.col:
-        f.write(i.data_return() + "\n")
+        if i.name == "person":
+            f.write(i.data_return() + "\n")
+            f.write("inv " + str(len(i.inventar)) + " " + str(len(i.inventar[0])) + "\n")
+            for k in i.inventar:
+                for g in k:
+                    if g:
+                        f.write(g.data_return() + ";")
+                    else:
+                        f.write("None" + ";")
+                f.write(" :nextstr: ")
+            f.write(" " + "\n")
+        else:
+            f.write(i.data_return() + "\n")
     f.close()
 
 
@@ -99,23 +111,41 @@ def open_all(world, slot):
     # загрузить игру из слота
     try:
         f = open('savefiles\save' + slot + '.txt', 'r')
+        mode = True
         for line in f:
-            obj = line.split()
-            if obj[0] == "seed":
-                world.seed = obj[1]
-            elif obj[0] == "Person":
-                world.create_object(Person(int(obj[1]), int(obj[2])))
-                world.col[-1].x = float(obj[3])
-                world.col[-1].y = float(obj[4])
-                world.col[-1].hp = int(obj[5])
-            elif obj[0] == "Number":
-                world.create_object(Number(int(obj[1]), float(obj[2]), float(obj[3])))
-            elif obj[0] == "Enemy":
-                person = world.return_obj(name="person")
-                world.create_object(Enemy(float(obj[1]), float(obj[2]), person))
-                world.col[-1].hp = int(obj[3])
-            elif obj[0] == "Sword":
-                world.create_object(Example_sword(float(obj[1]), float(obj[2])))
+            if mode:
+                obj = line.split()
+                if obj[0] == "seed":
+                    world.seed = obj[1]
+                elif obj[0] == "Person":
+                    world.create_object(Person(int(obj[1]), int(obj[2])))
+                    world.col[-1].x = float(obj[3])
+                    world.col[-1].y = float(obj[4])
+                    world.col[-1].hp = int(obj[5])
+                elif obj[0] == "Number":
+                    world.create_object(Number(int(obj[1]), float(obj[2]), float(obj[3])))
+                elif obj[0] == "Enemy":
+                    person = world.return_obj(name="person")
+                    world.create_object(Enemy(float(obj[1]), float(obj[2]), person))
+                    world.col[-1].hp = int(obj[3])
+                elif obj[0] == "Sword":
+                    world.create_object(Example_sword(float(obj[1]), float(obj[2])))
+                elif obj[0] == "inv":
+                    mode = False
+                    row = obj[1]
+                    col = obj[2]
+            else:
+                inv = line.split(" :nextstr: ")
+                for j in range(len(inv)):
+                    string = inv[j].split(";")
+                    for i in range(len(string)):
+                        if string[i] != "None" and string[i] != "" and string[i] != " \n":
+                            slot = string[i].split()
+                            if slot[0] == "Number":
+                                world.col[-1].inventar[j][i] = Number(int(slot[1]), float(slot[2]), float(slot[3]))
+                            elif slot[0] == "Sword":
+                                world.col[-1].inventar[j][i] = Example_sword(float(slot[1]), float(slot[2]))
+                mode = True
         f.close()
         return True
     except:
@@ -125,7 +155,7 @@ def random_generation(world):
     cellx = 700
     celly = 300
     for i in range(20):
-        for j in range(30):
+        for j in range(60):
             random.seed(i * j * world.seed)
             x = random.randint(0, cellx)
             random.seed(i * j * world.seed)
@@ -174,7 +204,7 @@ if __name__ == '__main__':
                 world.create_object(Enemy(900, -300, person))
                 world.create_object(Example_sword(200, -300))
                 slot = startparam[2]
-                world.seed = random.randint(-1000000, 1000000)
+                world.seed = random.randint(-100000, 100000)
             else:
                 slot = startparam[2]
                 r = open_all(world, str(slot))
