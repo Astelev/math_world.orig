@@ -92,9 +92,8 @@ class World:
     def display(self):
         # отображение обьектов и колизий
         r, g, b = self.backcol
-        g = int(g - self.camy * 0.01) % 255
-        g = int(g - self.camy * 0.01) % 255
-        b = int(b - self.camy * 0.02) % 255
+        g = int(g - (self.camy + 200) * 0.01) % 255
+        b = int(b - (self.camy + 200) * 0.02) % 255
         self.scr.fill((r, g, b))
         self.camx = self.return_obj(self.camera_binding).x - 400
         self.camy = self.return_obj(self.camera_binding).y - 510
