@@ -243,7 +243,6 @@ if __name__ == '__main__':
                 world.create_object(Number(10, 10, -30))
                 world.create_object(Number(10, 10, -20))
                 world.create_object(Enemy(900, -300, person))
-                world.create_object(Example_sword(200, -300))
                 slot = startparam[2]
                 world.seed = random.randint(-100000, 100000)
             else:
@@ -277,7 +276,7 @@ if __name__ == '__main__':
                             if not craftscreen(screen, clock, person.inventar):
                                 running = False
                         elif returnd:
-                            if returnd.damageble:
+                            if returnd.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
                                 person.attack(returnd)
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False
