@@ -8,6 +8,47 @@ import random
 
 pygame.init()
 
+def craftscreen(screen, clock, inventar):
+    craftbtn1 = Button(400, 150, "craft 1")
+    quitbtn = Button(400, 500, "quit")
+    craft1 = ["10"]
+    while True:
+        pygame.draw.rect(screen, (50, 50, 50), (300, 100, 300, 500))
+        craftbtn1.display(screen)
+        quitbtn.display(screen)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if quitbtn.check(x,y):
+                    return True
+                elif craftbtn1.check(x, y):
+                    isresurs = True
+                    delcell = []
+                    for i in craft1:
+                        temporary = False
+                        for j in inventar:
+                            for k in j:
+                                if k:
+                                    if k.name == i:
+                                        temporary = True
+                                        delcell.append([inventar.index(j), j.index(k)])
+                                        break
+                            if temporary:
+                                break
+                        if not temporary:
+                            isresurs = False
+                            # нет ресов
+                            break
+                    if isresurs:
+                        inventar[-1][-1] = Example_sword(0, 0)
+                        for i in delcell:
+                            inventar[i[0]][i[1]] = ""
+                        return True
+        pygame.display.flip()
+
+
 
 def startscreen(screen, clock, massag=""):
     # функция меню, возвращает список данных о начале игры [начать(True, False), загрузить или новая игра(True, False), номер слота для сохранения]
@@ -214,6 +255,7 @@ if __name__ == '__main__':
             massage = ""
             random_generation(world)
             person = world.return_obj("person")  # ссылается на персонажа
+            btncraft = Button(450, 10, "craft")
             flag = False  # храниет в себе нажата ли кнопка мыши
             returnd = False  # хранит в себе обьект на который было проиведено нажатие
             while running:
@@ -231,6 +273,9 @@ if __name__ == '__main__':
                             returnd = person.get_it(x, y)
                             if returnd:
                                 world.create_object(returnd)
+                        elif btncraft.check(x, y):
+                            if not craftscreen(screen, clock, person.inventar):
+                                running = False
                         elif returnd:
                             if returnd.damageble:
                                 person.attack(returnd)
@@ -272,6 +317,7 @@ if __name__ == '__main__':
                 else:
                     running = False
                 world.display()
+                btncraft.display(screen)
                 pygame.display.flip()
                 clock.tick(100)
             if not running:
