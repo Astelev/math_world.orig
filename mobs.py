@@ -5,24 +5,24 @@ from utilits import load_image, Anim
 class Enemy:
       def __init__(self, x, y, person, size=50, name="enemy"):
         # загрузка анимаций
-        self.image = load_image("enemy.png")
-        self.left = load_image("enemyl.png")
-        self.runright = Anim("runright_enemy", 1)
-        self.runleft = Anim("runlefte_enemy", 1)
-        self.atak = Anim("enemy_atak", 1)
-        self.atakl = Anim("runlefte_enemy", 1)
-        self.person = person
-        self.name = name
-        self.x = x
-        self.vx = 0
-        self.vy = 0
-        self.y = y
-        self.sizey = size
-        self.sizex = 50
-        self.do = ["", 0]
-        self.hp = 100
-        self.movable = False
-        self.damageble = True
+            self.image = load_image("enemy.png")
+            self.left = load_image("enemyl.png")
+            self.runright = Anim("runright_enemy", 1)
+            self.runleft = Anim("runlefte_enemy", 1)
+            self.atak = Anim("enemy_atak", 1)
+            self.atakl = Anim("runlefte_enemy", 1)
+            self.person = person
+            self.name = name
+            self.x = x
+            self.vx = 0
+            self.vy = 0
+            self.y = y
+            self.sizey = size
+            self.sizex = 50
+            self.do = ["", 0]
+            self.hp = 100
+            self.movable = False
+            self.damageble = True
 
       def status_set(self, do, status=True):
         # задать статус для анимаций, во время полёта статус автоматически "Jump"
