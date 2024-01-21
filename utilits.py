@@ -2,15 +2,8 @@ import pygame
 import os
 import sys
 import random
-
-
-def load_image(name):
-    fullname = os.path.join('data', name)
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    return image
+from objects import Number
+from imagefunk import load_image, Anim
 
 
 class Button:
@@ -53,24 +46,6 @@ class Text:
         self.visible = visible
 
 
-class Anim:
-    # класс анимаций. экзепляр хранит в себе анимацию.
-    def __init__(self, filename, frames):
-        self.images = []
-        for i in range(frames):
-            name = os.path.join('anime', filename, (str(i) + ".png"))
-            self.images.append(load_image(name))
-        self.nowframe = 0
-
-    def framedraw(self, screen, x, y):
-        # отрисовывает кадр на координатах
-        screen.blit(self.images[self.nowframe], (x, y))
-        if self.nowframe < len(self.images) - 1:
-            self.nowframe += 1
-        else:
-            self.nowframe = 0
-
-
 class World:
     def __init__(self, camerax, cameray, screen, objects=[], florcol=(100, 100, 100), backcol=(0, 0, 0)):
         self.seed = 0
@@ -107,6 +82,8 @@ class World:
                     if temp.damageble:
                         temp.damag(int((i.vx ** 2 + i.vy ** 2) ** 0.5))
             if i.do[0] == "dead":
+                if i.drop[0] == "Number":
+                    self.create_object(Number(i.drop[1], i.x, i.y))
                 self.del_object(self.col.index(i))
 
     def return_obj(self, name="", number=-1):

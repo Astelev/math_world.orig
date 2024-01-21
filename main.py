@@ -1,9 +1,10 @@
 import pygame
 import os
 import sys
-from utilits import World, Person, load_image, Anim, Collision_reactangle, Button, Text
-from mobs import Enemy
+from utilits import World, Person, Collision_reactangle, Button, Text
+from mobs import Enemy, Enemystr
 from objects import Example_sword, Number, RangedWeapon, Projectile
+from imagefunk import load_image, Anim
 import random
 
 pygame.init()
@@ -171,6 +172,12 @@ def open_all(world, slot):
                     world.col[-1].hp = int(obj[3])
                 elif obj[0] == "Sword":
                     world.create_object(Example_sword(float(obj[1]), float(obj[2])))
+                elif obj[0] == "ranged_weapon":
+                    world.create_object(RangedWeapon(float(obj[1]), float(obj[2])))
+                elif obj[0] == "Enemystr":
+                    person = world.return_obj(name="person")
+                    world.create_object(Enemystr(float(obj[1]), float(obj[2]), person, obj[4]))
+                    world.col[-1].hp = int(obj[3])
                 elif obj[0] == "inv":
                     mode = False
                     row = obj[1]
@@ -186,6 +193,8 @@ def open_all(world, slot):
                                 world.col[-1].inventar[j][i] = Number(int(slot[1]), float(slot[2]), float(slot[3]))
                             elif slot[0] == "Sword":
                                 world.col[-1].inventar[j][i] = Example_sword(float(slot[1]), float(slot[2]))
+                            elif slot[0] == "ranged_weapon":
+                                world.create_object(RangedWeapon(float(obj[1]), float(obj[2])))
                 mode = True
         f.close()
         return True
@@ -242,7 +251,8 @@ if __name__ == '__main__':
                 world.create_object(person)
                 world.create_object(Number(10, 10, -30))
                 world.create_object(Number(10, 10, -20))
-                world.create_object(Enemy(900, -300, person))
+                world.create_object(Enemystr(900, -100, person, 10))
+                world.create_object(Enemystr(900, -500, person, 10))
                 world.create_object(RangedWeapon(100,-200))
                 slot = startparam[2]
                 world.seed = random.randint(-100000, 100000)
@@ -282,8 +292,8 @@ if __name__ == '__main__':
                                 world.create_object(Projectile(person.x, person.y, 20))
                                 world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
                                                             (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
-                            elif returnd:
-                                if returnd.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
+                        elif returnd:
+                            if returnd.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
                                     person.attack(returnd)
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False

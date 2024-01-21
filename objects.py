@@ -1,5 +1,5 @@
 import pygame
-from utilits import load_image, Anim
+from imagefunk import load_image, Anim
 
 
 class Number:
@@ -93,6 +93,7 @@ class Projectile:
         self.damageble = False
         self.usable = False
         self.do = ["", 0]
+        self.drop = ["number", 10]
 
     def display(self, x, y, screen, collisions):
         screen.blit(self.image, (self.x - x, self.y - y))
