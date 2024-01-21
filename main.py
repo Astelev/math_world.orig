@@ -276,15 +276,15 @@ if __name__ == '__main__':
                         elif btncraft.check(x, y):
                             if not craftscreen(screen, clock, person.inventar):
                                 running = False
-                        elif returnd:
-                            if returnd.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
-                                person.attack(returnd)
                         elif person.use:
                             if person.use.Ranged:
                                 person.attack(0)
                                 world.create_object(Projectile(person.x, person.y, 20))
                                 world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
                                                             (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
+                            elif returnd:
+                                if returnd.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
+                                    person.attack(returnd)
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False
                         if returnd and x < person.sizeinventarx and y < person.sizeinventary:

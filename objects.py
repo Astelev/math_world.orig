@@ -81,6 +81,7 @@ class Example_sword:
 class Projectile:
     def __init__(self, x, y, speed):
         self.image = pygame.transform.scale(load_image("Projectile.png"), (30, 30))
+        self.name = "Projectile"
         self.x = x
         self.y = y
         self.speed = speed
@@ -88,11 +89,25 @@ class Projectile:
         self.vy = 0
         self.sizex = 30
         self.sizey = 30
+        self.movable = False
+        self.damageble = False
+        self.usable = False
         self.do = ["", 0]
 
     def display(self, x, y, screen, collisions):
         screen.blit(self.image, (self.x - x, self.y - y))
+        for i in collisions:
+            col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+            if "x+" in col and self.vx >= 0:
+                self.status_set("dead", True)
+            elif "x-" in col and self.vx <= 0:
+                self.status_set("dead", True)
+            if "y+" in col and self.vy >= 0:
+                self.status_set("dead", True)
+            elif "y-" in col and self.vy <= 0:
+                self.status_set("dead", True)
         self.move()
+
 
     def move(self):
         self.x += self.vx

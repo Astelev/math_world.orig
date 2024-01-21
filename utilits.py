@@ -101,6 +101,11 @@ class World:
             i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
         for i in self.col:
             i.display(int(self.camx), int(self.camy), self.scr, self.collisions)
+            if i.name == "Projectile":
+                temp = self.click(i.x - self.camx, i.y - self.camy)
+                if temp:
+                    if temp.damageble:
+                        temp.damag(int((i.vx ** 2 + i.vy ** 2) ** 0.5))
             if i.do[0] == "dead":
                 self.del_object(self.col.index(i))
 
