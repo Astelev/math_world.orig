@@ -3,12 +3,14 @@ from utilits import load_image, Anim
 
 
 class Enemy:
-    def __init__(self, x, y, person, size=50, name="enemy"):
+      def __init__(self, x, y, person, size=50, name="enemy"):
         # загрузка анимаций
         self.image = load_image("enemy.png")
+        self.left = load_image("enemyl.png")
         self.runright = Anim("runright_enemy", 1)
         self.runleft = Anim("runlefte_enemy", 1)
         self.atak = Anim("enemy_atak", 1)
+        self.atakl = Anim("runlefte_enemy", 1)
         self.person = person
         self.name = name
         self.x = x
@@ -46,8 +48,10 @@ class Enemy:
                 col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
                 if "x+" in col and self.vx >= 0:
                     self.vx = 0
+                    self.vy = -13.5
                 elif "x-" in col and self.vx <= 0:
                     self.vx = 0
+                    self.vy = -13.5
                 if "y+" in col and self.vy >= 0:
                     self.vy = 0
                     c = False
@@ -55,6 +59,11 @@ class Enemy:
                         self.vx = 0
                 elif "y-" in col and self.vy <= 0:
                     self.vy = 0
+                '''colleft = i.collision_chek(self.x - 5, self.y, 0, self.sizey)
+                colright = i.collision_chek(self.x + 5, self.y, self.sizex, self.sizey)
+                if ("y+" not in colleft and self.person.x < self.x) or (
+                        "y+" not in colright and self.person.x > self.x):
+                    self.vx = 0'''
             if c:
                 self.status_set("jump", True)
             else:
@@ -63,18 +72,23 @@ class Enemy:
             if self.do[0] == "jump":
                 self.y = self.y + self.vy
                 self.vy = self.vy + 0.5
-                screen.blit(self.image, (self.x - x, self.y - y))
+                if self.person.x < self.x:
+                    screen.blit(self.left, (self.x - x, self.y - y))
+                else:
+                    screen.blit(self.image, (self.x - x, self.y - y))
             elif self.do[0] == "moveright":
                 self.runright.framedraw(screen, self.x - x, self.y - y)
             elif self.do[0] == "moveleft":
                 self.runleft.framedraw(screen, self.x - x, self.y - y)
             elif self.do[0] == "atak":
-                self.atak.framedraw(screen, self.x - x, self.y - y)
+                if self.person.x < self.x:
+                    self.atakl.framedraw(screen, self.x - x, self.y - y)
+                else:
+                    self.atak.framedraw(screen, self.x - x, self.y - y)
             else:
                 screen.blit(self.image, (self.x - x, self.y - y))
         pygame.draw.rect(screen, (255, 255, 255), (self.x - x, self.y - y - 20, self.hp // 2, 10))
         pygame.draw.rect(screen, (0, 100, 100), (self.x - x - 3, self.y - y - 23, 56, 16), 1)
-
     def agr(self):
         if abs(self.person.x - self.x) > 60:
             if self.person.x < self.x:
