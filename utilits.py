@@ -151,11 +151,14 @@ class Person:
     def attack(self, enemy):
         self.status_set("attack", True)
         if self.do[1] == 0:
+            self.do[1] = 20
             if self.use:
-                enemy.damag(self.use.damage)
+                if self.use.Ranged:
+                    return True
+                else:
+                    enemy.damag(self.use.damage)
             else:
                 enemy.damag(5)
-            self.do[1] = 20
 
     def damag(self, level):
         self.hp -= level

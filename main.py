@@ -2,8 +2,8 @@ import pygame
 import os
 import sys
 from utilits import World, Person, load_image, Anim, Collision_reactangle, Button, Text
-from objects import Number, Example_sword
 from mobs import Enemy
+from objects import Example_sword, Number, RangedWeapon, Projectile
 import random
 
 pygame.init()
@@ -243,6 +243,7 @@ if __name__ == '__main__':
                 world.create_object(Number(10, 10, -30))
                 world.create_object(Number(10, 10, -20))
                 world.create_object(Enemy(900, -300, person))
+                world.create_object(RangedWeapon(100,-200))
                 slot = startparam[2]
                 world.seed = random.randint(-100000, 100000)
             else:
@@ -278,6 +279,12 @@ if __name__ == '__main__':
                         elif returnd:
                             if returnd.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
                                 person.attack(returnd)
+                        elif person.use:
+                            if person.use.Ranged:
+                                person.attack(0)
+                                world.create_object(Projectile(person.x, person.y, 20))
+                                world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
+                                                            (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False
                         if returnd and x < person.sizeinventarx and y < person.sizeinventary:

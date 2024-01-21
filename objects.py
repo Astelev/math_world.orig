@@ -54,6 +54,7 @@ class Example_sword:
         self.movable = True
         self.damageble = False
         self.usable = True
+        self.Ranged = False
         self.damage = 40
 
     def display(self, x, y, screen, colis):
@@ -78,30 +79,45 @@ class Example_sword:
     def data_return(self):
         return "Sword" + " " + str(self.x) + " " + str(self.y)
 class Projectile:
-    def __init__(self, x, y, speed, image_path):
-        self.image = pygame.transform.scale(pygame.image.load('bow.png'), (10, 10))
+    def __init__(self, x, y, speed):
+        self.image = pygame.transform.scale(load_image("Projectile.png"), (30, 30))
         self.x = x
         self.y = y
         self.speed = speed
-        self.direction = [0, 0]
+        self.vx = speed
+        self.vy = 0
+        self.sizex = 30
+        self.sizey = 30
+        self.do = ["", 0]
 
-    def display(self, screen):
-        screen.blit(self.image, (self.x, self.y))
+    def display(self, x, y, screen, collisions):
+        screen.blit(self.image, (self.x - x, self.y - y))
+        self.move()
 
     def move(self):
-        self.x += self.direction[0] * self.speed
-        self.y += self.direction[1] * self.speed
+        self.x += self.vx
+        self.y += self.vy
+        self.vy = self.vy + 0.5
 
-    def set_direction(self, x, y):
-        self.direction[0] = x
-        self.direction[1] = y
+    def set_direction(self, cos, sin):
+        speed = (self.vx ** 2 + self.vy ** 2) ** 0.5
+        self.vx = speed * cos
+        self.vy = speed * sin
+
+    def status_set(self, do, status=True):
+        # задать статус для анимаций
+        if status:
+            self.do[0] = do
+        elif self.do[0] == do and not status:
+            self.do[0] = ""
+            self.do[1] = 0
 
 
 # Создание класса дальнобойного оружия
 class RangedWeapon:
     def __init__(self, x, y, size=40, name="ranged_weapon"):
         self.name = name
-        self.image = pygame.transform.scale(pygame.image.load("arrow.png"), (size, size))
+        self.image = pygame.transform.scale(load_image("bow.png"), (size, size))
         self.x = x
         self.y = y
         self.sizex = size
@@ -110,6 +126,7 @@ class RangedWeapon:
         self.movable = True
         self.damageble = False
         self.usable = True
+        self.Ranged = True
         self.damage = 40
 
     def display(self, x, y, screen, colis):
