@@ -43,12 +43,12 @@ class Number:
 
 
 class Example_sword:
-    def __init__(self, x, y, size=40, name="sword"):
+    def __init__(self, x, y, size=60, name="sword"):
         self.name = name
-        self.image = pygame.transform.scale(load_image("sword.png"), (size, size))
+        self.image = pygame.transform.scale(load_image("sword.png"), (size//3, size))
         self.x = x
         self.y = y
-        self.sizex = size
+        self.sizex = size//3
         self.sizey = size
         self.do = ["", 0]
         self.movable = True
@@ -131,7 +131,7 @@ class Projectile:
 
 # Создание класса дальнобойного оружия
 class RangedWeapon:
-    def __init__(self, x, y, size=40, name="ranged_weapon"):
+    def __init__(self, x, y, size=60, name="ranged_weapon"):
         self.name = name
         self.image = pygame.transform.scale(load_image("bow.png"), (size, size))
         self.x = x

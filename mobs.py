@@ -141,7 +141,7 @@ class Enemystr:
         self.hp = 80
         self.movable = False
         self.damageble = True
-        self.drop = ["Number", 10]
+        self.drop = ["Number", str(self.c)]
 
     def status_set(self, do, status=True):
         if status:

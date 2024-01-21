@@ -14,7 +14,7 @@ def craftscreen(screen, clock, inventar):
     text = Text(350, 100, "craft meny")
     craft1image = pygame.transform.scale(load_image("craft1.png"), (100, 50))
     quitbtn = Button(400, 500, "quit")
-    craft1 = ["1", "*"]
+    craft1 = ["1", "+"]
     while True:
         pygame.draw.rect(screen, (50, 50, 50), (300, 100, 300, 500))
         text.display(screen)
@@ -255,8 +255,8 @@ if __name__ == '__main__':
                 world.create_object(person)
                 world.create_object(Number(10, 10, -30))
                 world.create_object(Number(10, 10, -20))
-                world.create_object(Enemystr(900, -100, person, 10))
-                world.create_object(Enemystr(900, -500, person, 10))
+                world.create_object(Enemystr(900, -100, person, 1))
+                world.create_object(Enemystr(900, -500, person, "+"))
                 world.create_object(RangedWeapon(100,-200))
                 slot = startparam[2]
                 world.seed = random.randint(-100000, 100000)
