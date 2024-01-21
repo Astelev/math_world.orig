@@ -1,4 +1,6 @@
-seed -38165
-Person 3 10 -165 -117.5 400
+seed 8627
+Person 3 10 335 -326.0 400
 inv 3 10
-ranged_weapon -395 -624.5;Sword -1180 -942.5;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;Sword -148 -570.0;None; :nextstr:  
+ranged_weapon -400 -622.5;Sword -475 -927.0;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;Sword 0 0; :nextstr:  
+Number 10 10 -30
+Number 10 10 -20

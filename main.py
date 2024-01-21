@@ -10,11 +10,15 @@ import random
 pygame.init()
 
 def craftscreen(screen, clock, inventar):
-    craftbtn1 = Button(400, 150, "craft 1")
+    craftbtn1 = Button(350, 150, "Sword")
+    text = Text(350, 100, "craft meny")
+    craft1image = pygame.transform.scale(load_image("craft1.png"), (100, 50))
     quitbtn = Button(400, 500, "quit")
-    craft1 = ["10"]
+    craft1 = ["1", "*"]
     while True:
         pygame.draw.rect(screen, (50, 50, 50), (300, 100, 300, 500))
+        text.display(screen)
+        screen.blit(craft1image, (470, 150))
         craftbtn1.display(screen)
         quitbtn.display(screen)
         for event in pygame.event.get():
@@ -194,7 +198,7 @@ def open_all(world, slot):
                             elif slot[0] == "Sword":
                                 world.col[-1].inventar[j][i] = Example_sword(float(slot[1]), float(slot[2]))
                             elif slot[0] == "ranged_weapon":
-                                world.create_object(RangedWeapon(float(obj[1]), float(obj[2])))
+                                world.col[-1].inventar[j][i] = RangedWeapon(float(obj[1]), float(obj[2]))
                 mode = True
         f.close()
         return True
