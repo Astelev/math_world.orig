@@ -9,6 +9,13 @@ import random
 
 pygame.init()
 
+def spawn_enemystr(person, world, clock):
+    if clock.get_time() % 30000 == 0:
+        if random.randint(0, 1) == 0:
+            world.add_object(Enemystr(person.x, person.y, 1000))
+        else:
+            world.add_object(Enemystr(person.x, person.y, 2000))
+            
 def craftscreen(screen, clock, inventar):
     craftbtn1 = Button(350, 150, "Sword")
     text = Text(350, 100, "craft meny")
