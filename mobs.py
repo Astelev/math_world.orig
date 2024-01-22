@@ -1,5 +1,6 @@
 import pygame
 from imagefunk import load_image, Anim
+import random
 
 
 class Enemy:
@@ -45,30 +46,31 @@ class Enemy:
         c = True
         chek = True
         for i in collision:
-            col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-            if "x+" in col and self.vx >= 0:
-                self.vx = 0
-                if self.do[0] != "jump":
-                    self.vy = -13.5
-            elif "x-" in col and self.vx <= 0:
-                self.vx = 0
-                if self.do[0] != "jump":
-                    self.vy = -13.5
-            if "y+" in col and self.vy >= 0:
-                self.vy = 0
-                c = False
-                if self.do[0] != "moveright" and self.do[0] != "moveleft":
+            if abs(i.x - self.x) < i.sizex * 2 and abs(i.y - self.y) < i.sizey * 2:
+                col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+                if "x+" in col and self.vx >= 0:
                     self.vx = 0
-            elif "y-" in col and self.vy <= 0:
-                self.vy = 0
-            if self.do[0] != "jump":
-                colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey)
-                colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey)
-                if ("y+" in colleft and self.person.x < self.x) or (
-                      "y+" in colright and self.person.x > self.x):
+                    if self.do[0] != "jump":
+                        self.vy = -13.5
+                elif "x-" in col and self.vx <= 0:
+                    self.vx = 0
+                    if self.do[0] != "jump":
+                        self.vy = -13.5
+                if "y+" in col and self.vy >= 0:
+                    self.vy = 0
+                    c = False
+                    if self.do[0] != "moveright" and self.do[0] != "moveleft":
+                        self.vx = 0
+                elif "y-" in col and self.vy <= 0:
+                    self.vy = 0
+                if self.do[0] != "jump":
+                    colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey)
+                    colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey)
+                    if ("y+" in colleft and self.person.x < self.x) or (
+                          "y+" in colright and self.person.x > self.x):
+                        chek = False
+                else:
                     chek = False
-            else:
-                chek = False
         if chek:
             self.vx = 0
         if c:
@@ -87,7 +89,7 @@ class Enemy:
             self.runright.framedraw(screen, self.x - x, self.y - y)
         elif self.do[0] == "moveleft":
             self.runleft.framedraw(screen, self.x - x, self.y - y)
-        elif self.do[0] == "atak":
+        elif self.do[0] == "attack":
             if self.person.x < self.x:
                 self.atakl.framedraw(screen, self.x - x, self.y - y)
             else:
@@ -137,6 +139,7 @@ class Enemystr:
         self.y = y
         self.sizey = size
         self.sizex = 50
+        self.speed = random.randint(3,5)
         self.do = ["", 0]
         self.hp = 80
         self.movable = False
@@ -163,30 +166,31 @@ class Enemystr:
         c = True
         chek = True
         for i in collision:
-            col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-            if "x+" in col and self.vx >= 0:
-                self.vx = 0
-                if self.do[0] != "jump":
-                    self.vy = -13.5
-            elif "x-" in col and self.vx <= 0:
-                self.vx = 0
-                if self.do[0] != "jump":
-                    self.vy = -13.5
-            if "y+" in col and self.vy >= 0:
-                self.vy = 0
-                c = False
-                if self.do[0] != "moveright" and self.do[0] != "moveleft":
+            if abs(i.x - self.x) < i.sizex * 2 and abs(i.y - self.y) < i.sizey * 2:
+                col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+                if "x+" in col and self.vx >= 0:
                     self.vx = 0
-            elif "y-" in col and self.vy <= 0:
-                self.vy = 0
-            if self.do[0] != "jump":
-                colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey + 150)
-                colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey + 150)
-                if ("y+" in colleft and self.person.x < self.x) or (
-                      "y+" in colright and self.person.x > self.x):
+                    if self.do[0] != "jump":
+                        self.vy = -13.5
+                elif "x-" in col and self.vx <= 0:
+                    self.vx = 0
+                    if self.do[0] != "jump":
+                        self.vy = -13.5
+                if "y+" in col and self.vy >= 0:
+                    self.vy = 0
+                    c = False
+                    if self.do[0] != "moveright" and self.do[0] != "moveleft":
+                        self.vx = 0
+                elif "y-" in col and self.vy <= 0:
+                    self.vy = 0
+                if self.do[0] != "jump":
+                    colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey + 150)
+                    colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey + 150)
+                    if ("y+" in colleft and self.person.x < self.x) or (
+                          "y+" in colright and self.person.x > self.x):
+                        chek = False
+                else:
                     chek = False
-            else:
-                chek = False
         if chek:
             self.vx = 0
         if c:
@@ -201,16 +205,16 @@ class Enemystr:
         text = font.render(str(self.c), True, (255, 255, 255))
         screen.blit(text, (self.x - x, self.y - y))
         pygame.draw.rect(screen, (255, 255, 255), (self.x - x, self.y - y - 20, self.hp // 2, 10))
-        pygame.draw.rect(screen, (0, 100, 100), (self.x - x - 3, self.y - y - 23, 56, 16), 1)
+        pygame.draw.rect(screen, (0, 100, 100), (self.x - x - 3, self.y - y - 23, 46, 16), 1)
 
     def agr(self):
         if abs(self.person.x - self.x) > 60:
             if self.person.x < self.x:
-                  self.vx = -3
+                  self.vx = -self.speed
                   if self.do[0] != "jump":
                         self.status_set("moveleft")
             elif self.person.x > self.x:
-                  self.vx = 3
+                  self.vx = self.speed
                   if self.do[0] != "jump":
                         self.status_set("moveright")
         elif abs(self.person.y - self.y) < 100:
