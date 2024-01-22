@@ -46,31 +46,30 @@ class Enemy:
         c = True
         chek = True
         for i in collision:
-            if abs(i.x - self.x) < i.sizex + self.sizex and abs(i.y - self.y) < i.sizey + self.sizey:
-                col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-                if "x+" in col and self.vx >= 0:
-                    self.vx = 0
-                    if self.do[0] != "jump":
-                        self.vy = -13.5
-                elif "x-" in col and self.vx <= 0:
-                    self.vx = 0
-                    if self.do[0] != "jump":
-                        self.vy = -13.5
-                if "y+" in col and self.vy >= 0:
-                    self.vy = 0
-                    c = False
-                    if self.do[0] != "moveright" and self.do[0] != "moveleft":
-                        self.vx = 0
-                elif "y-" in col and self.vy <= 0:
-                    self.vy = 0
+            col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+            if "x+" in col and self.vx >= 0:
+                self.vx = 0
                 if self.do[0] != "jump":
-                    colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey)
-                    colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey)
-                    if ("y+" in colleft and self.person.x < self.x) or (
-                          "y+" in colright and self.person.x > self.x):
-                        chek = False
-                else:
+                    self.vy = -13.5
+            elif "x-" in col and self.vx <= 0:
+                self.vx = 0
+                if self.do[0] != "jump":
+                    self.vy = -13.5
+            if "y+" in col and self.vy >= 0:
+                self.vy = 0
+                c = False
+                if self.do[0] != "moveright" and self.do[0] != "moveleft":
+                    self.vx = 0
+            elif "y-" in col and self.vy <= 0:
+                self.vy = 0
+            if self.do[0] != "jump":
+                colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey)
+                colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey)
+                if ("y+" in colleft and self.person.x < self.x) or (
+                      "y+" in colright and self.person.x > self.x):
                     chek = False
+            else:
+                chek = False
         if chek:
             self.vx = 0
         if c:
@@ -166,31 +165,30 @@ class Enemystr:
         c = True
         chek = True
         for i in collision:
-            if abs(i.x - self.x) < i.sizex + self.sizex and abs(i.y - self.y) < i.sizey + self.sizey:
-                col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-                if "x+" in col and self.vx >= 0:
-                    self.vx = 0
-                    if self.do[0] != "jump":
-                        self.vy = -13.5
-                elif "x-" in col and self.vx <= 0:
-                    self.vx = 0
-                    if self.do[0] != "jump":
-                        self.vy = -13.5
-                if "y+" in col and self.vy >= 0:
-                    self.vy = 0
-                    c = False
-                    if self.do[0] != "moveright" and self.do[0] != "moveleft":
-                        self.vx = 0
-                elif "y-" in col and self.vy <= 0:
-                    self.vy = 0
+            col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+            if "x+" in col and self.vx >= 0:
+                self.vx = 0
                 if self.do[0] != "jump":
-                    colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey + 150)
-                    colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey + 150)
-                    if ("y+" in colleft and self.person.x < self.x) or (
-                          "y+" in colright and self.person.x > self.x):
-                        chek = False
-                else:
+                    self.vy = -13.5
+            elif "x-" in col and self.vx <= 0:
+                self.vx = 0
+                if self.do[0] != "jump":
+                    self.vy = -13.5
+            if "y+" in col and self.vy >= 0:
+                self.vy = 0
+                c = False
+                if self.do[0] != "moveright" and self.do[0] != "moveleft":
+                    self.vx = 0
+            elif "y-" in col and self.vy <= 0:
+                self.vy = 0
+            if self.do[0] != "jump":
+                colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey + 150)
+                colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey + 150)
+                if ("y+" in colleft and self.person.x < self.x) or (
+                      "y+" in colright and self.person.x > self.x):
                     chek = False
+            else:
+                chek = False
         if chek:
             self.vx = 0
         if c:

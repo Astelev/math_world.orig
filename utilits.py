@@ -57,6 +57,8 @@ class World:
         self.collisions = []
         self.scr = screen
         self.camera_binding = "person"  # обьект к которому будет прикреплена камера
+        self.localcollision = []
+        self.count = 0
 
     def create_object(self, object):
         self.col.append(object)
@@ -72,11 +74,19 @@ class World:
         self.scr.fill((r, g, b))
         self.camx = self.return_obj(self.camera_binding).x - 400
         self.camy = self.return_obj(self.camera_binding).y - 510
+        if self.count < 100:
+            self.count += 1
+        else:
+            self.count = 0
+            self.localcollision = []
         for i in self.collisions:
-            i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
+            if abs(i.x - self.camx) < i.sizex + 1000 and abs(i.y - self.camy) < i.sizey + 1000:
+                i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
+            if self.count == 1 and abs(i.x - self.camx) < i.sizex + 1000 and abs(i.y - self.camy) < i.sizey + 1000:
+                self.localcollision.append(i)
         for i in self.col:
             if abs(i.x - self.camx) < 1000 and abs(i.y - self.camy) < 1000:
-                i.display(int(self.camx), int(self.camy), self.scr, self.collisions)
+                i.display(int(self.camx), int(self.camy), self.scr, self.localcollision)
                 if i.name == "Projectile":
                     temp = self.click(i.x - self.camx, i.y - self.camy)
                     if temp:
@@ -167,19 +177,18 @@ class Person:
                 self.heal(random.randint(0, 1))
             c = True
             for i in collision:
-                if abs(i.x - self.x) < i.sizex + self.sizex and abs(i.y - self.y) < i.sizey + self.sizey:
-                    col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-                    if "x+" in col and self.vx >= 0:
+                col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+                if "x+" in col and self.vx >= 0:
+                    self.vx = 0
+                elif "x-" in col and self.vx <= 0:
+                    self.vx = 0
+                if "y+" in col and self.vy >= 0:
+                    self.vy = 0
+                    c = False
+                    if self.do[0] != "moveright" and self.do[0] != "moveleft":
                         self.vx = 0
-                    elif "x-" in col and self.vx <= 0:
-                        self.vx = 0
-                    if "y+" in col and self.vy >= 0:
-                        self.vy = 0
-                        c = False
-                        if self.do[0] != "moveright" and self.do[0] != "moveleft":
-                            self.vx = 0
-                    elif "y-" in col and self.vy <= 0:
-                        self.vy = 0
+                elif "y-" in col and self.vy <= 0:
+                    self.vy = 0
             if c:
                 self.status_set("jump", True)
             else:

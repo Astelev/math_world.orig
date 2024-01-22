@@ -15,7 +15,7 @@ def spawn_enemystr(person, world, clock):
         for i in world.col:
             if i.damageble:
                 mobs += 1
-        if mobs < 7:
+        if mobs < 5:
             dx = random.randint(600, 2000) * (random.random() * 2 - 1)
             dy = random.randint(500, 1000) * (random.random() * 2 - 1)
             if person.y > - 400:
@@ -36,6 +36,7 @@ def craftscreen(screen, clock, inventar):
     craftbtn2 = Button(350, 210, "Bow")
     text = Text(350, 100, "craft meny")
     craft1image = pygame.transform.scale(load_image("craft1.png"), (100, 50))
+    craft2image = pygame.transform.scale(load_image("craft2.png"), (100, 50))
     quitbtn = Button(400, 500, "quit")
     # списки предметов для крафта состоит из списков из двух элементов 1- name требуемого обьекта, 2- количество
     craft1 = [["1", 1], ["+", 1]]
@@ -44,6 +45,7 @@ def craftscreen(screen, clock, inventar):
         pygame.draw.rect(screen, (50, 50, 50), (300, 100, 300, 500))
         text.display(screen)
         screen.blit(craft1image, (470, 150))
+        screen.blit(craft2image, (470, 210))
         craftbtn1.display(screen)
         craftbtn2.display(screen)
         quitbtn.display(screen)
@@ -264,7 +266,7 @@ def random_generation(world):
     cellx = 700
     celly = 300
     for i in range(20):
-        for j in range(60):
+        for j in range(500):
             random.seed(i * j * world.seed)
             x = random.randint(0, cellx)
             random.seed(i * j * world.seed)
