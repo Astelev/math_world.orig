@@ -1,6 +1,21 @@
-seed 68917
-Person 3 10 -130.0 -110.5 400
+seed -78245
+Person 3 10 -3110.0 -1959.0 400
 inv 3 10
-ranged_weapon 3.0 10.0;Number 10 844.0 -625.5;Number 10 793.0 -626.5;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr:  
-Number 10 -101.0 -205.5
-Number 10 -159.0 -201.5
+None;Sword -491.0 -946.0;ranged_weapon 3.0 10.0;None;Number 2 -29.0 -836.0;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr:  
+Number 10 10.0 -30.0
+Number 10 10.0 -20.0
+Number 2 402.0 -369.5
+Enemystr 1532.4975787036847 -27.6813423072075 80 2
+Number 2 -924.0 -78.0
+Number 2 -898.7405639270924 -52.716742690387946
+Number 2 166.84268050705862 -52.40659227533553
+Projectile
+Number 2 481.4833729110586 -379.40597419354424
+Enemystr -3038.1318300292915 -2473.3052510617067 80 2
+Enemystr -3137.855151377212 -1499.905661208934 80 2
+Enemystr -3139.362566152442 -1777.6222197043096 80 2
+Enemystr -3894.2775902188455 -2435.4851372187554 80 2
+Projectile
+Enemystr -2849.422316537325 -2214.7419884536303 31 2
+Projectile
+Projectile

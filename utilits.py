@@ -75,8 +75,10 @@ class World:
         for i in self.collisions:
             i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
         for i in self.col:
-            i.display(int(self.camx), int(self.camy), self.scr, self.collisions)
+            if abs(i.x - self.camx) < 1000 and abs(i.y - self.camy) < 1000:
+                i.display(int(self.camx), int(self.camy), self.scr, self.collisions)
             if i.name == "Projectile":
+                i.move()
                 temp = self.click(i.x - self.camx, i.y - self.camy)
                 if temp:
                     if temp.damageble:
@@ -140,7 +142,7 @@ class Person:
                 else:
                     enemy.damag(self.use.damage)
             else:
-                enemy.damag(5)
+                enemy.damag(20)
 
     def damag(self, level):
         self.hp -= level

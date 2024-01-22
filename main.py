@@ -7,6 +7,7 @@ from objects import Example_sword, Number, RangedWeapon, Projectile
 from imagefunk import load_image, Anim
 import random
 
+#инициализация pygame
 pygame.init()
 
 def spawn_enemystr(person, world, clock):
@@ -18,15 +19,18 @@ def spawn_enemystr(person, world, clock):
             
 def craftscreen(screen, clock, inventar):
     craftbtn1 = Button(350, 150, "Sword")
+    craftbtn2 = Button(350, 200, "bow")
     text = Text(350, 100, "craft meny")
     craft1image = pygame.transform.scale(load_image("craft1.png"), (100, 50))
     quitbtn = Button(400, 500, "quit")
     craft1 = ["1", "+"]
+    craft2 = ["2", "2", "+"]
     while True:
         pygame.draw.rect(screen, (50, 50, 50), (300, 100, 300, 500))
         text.display(screen)
         screen.blit(craft1image, (470, 150))
         craftbtn1.display(screen)
+        craftbtn2.display(screen)
         quitbtn.display(screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -55,6 +59,29 @@ def craftscreen(screen, clock, inventar):
                             break
                     if isresurs:
                         inventar[-1][-1] = Example_sword(0, 0)
+                        for i in delcell:
+                            inventar[i[0]][i[1]] = ""
+                        return True
+                elif craftbtn2.check(x, y):
+                    isresurs = True
+                    delcell = []
+                    for i in craft2:
+                        temporary = False
+                        for j in inventar:
+                            for k in j:
+                                if k:
+                                    if k.name == i:
+                                        temporary = True
+                                        delcell.append([inventar.index(j), j.index(k)])
+                                        break
+                            if temporary:
+                                break
+                        if not temporary:
+                            isresurs = False
+                            # нет ресов
+                            break
+                    if isresurs:
+                        inventar[-1][-1] = RangedWeapon(0, 0)
                         for i in delcell:
                             inventar[i[0]][i[1]] = ""
                         return True
@@ -224,6 +251,18 @@ def random_generation(world):
             world.create_collision(
                 Collision_reactangle(-15 * cellx + j * cellx + x, -200 - i * celly - y, 500, 50))
 
+def random_spawn(world, person, a):
+    for i in range(a):
+        dx = random.randint(600, 2000) * (random.random() * 2 - 1)
+        dy = random.randint(500, 1000) * (random.random() * 2 - 1)
+        temp = False
+        for i in world.collisions:
+            if "y+" in i.collision_chek(person.x + dx, person.y + dy, 100, 100):
+                temp = True
+                break
+        if temp:
+            world.create_object(Enemystr(person.x + dx, person.y + dy, person, "2"))
+
 def deadscreen(screen, clock):
     text = Text(400, 200, "you are dead!")
     out = Button(400, 300, "go to menu")
@@ -242,7 +281,6 @@ def deadscreen(screen, clock):
 
 
 if __name__ == '__main__':
-    # инициализация Pygame:
     size = 1000, 800
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
@@ -264,7 +302,8 @@ if __name__ == '__main__':
                 world.create_object(Number(10, 10, -20))
                 world.create_object(Enemystr(900, -100, person, 1))
                 world.create_object(Enemystr(900, -500, person, "+"))
-                world.create_object(RangedWeapon(100,-200))
+                world.create_object(Enemystr(900, -800, person, "+"))
+                random_spawn(world, person, 10)
                 slot = startparam[2]
                 world.seed = random.randint(-100000, 100000)
             else:
@@ -281,6 +320,8 @@ if __name__ == '__main__':
             returnd = False  # хранит в себе обьект на который было проиведено нажатие
             while running:
                 # цикл игры, если прервать break то переходит в меню, если прервать с помощью running = False выходит из программы
+                if random.randint(0, 100) == 0:
+                    random_spawn(world, person, 1)
                 x, y = pygame.mouse.get_pos()
                 if not flag and returnd:  # если до этого был обьект который мы двигали а сейчас отпустили убирает у него статус двигается
                     returnd.status_set("move", False)
@@ -303,8 +344,8 @@ if __name__ == '__main__':
                                 world.create_object(Projectile(person.x, person.y, 20))
                                 world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
                                                             (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
-                        elif returnd:
-                            if returnd.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
+                        if returnd:
+                            if returnd.damageble and abs(x - 500) < 300 and abs(y - 600) < 200:
                                     person.attack(returnd)
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False

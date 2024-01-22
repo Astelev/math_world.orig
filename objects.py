@@ -107,7 +107,6 @@ class Projectile:
                 self.status_set("dead", True)
             elif "y-" in col and self.vy <= 0:
                 self.status_set("dead", True)
-        self.move()
 
 
     def move(self):
@@ -127,6 +126,8 @@ class Projectile:
         elif self.do[0] == do and not status:
             self.do[0] = ""
             self.do[1] = 0
+    def data_return(self):
+        return "Projectile"
 
 
 # Создание класса дальнобойного оружия
