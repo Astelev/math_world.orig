@@ -7,24 +7,39 @@ from objects import Example_sword, Number, RangedWeapon, Projectile
 from imagefunk import load_image, Anim
 import random
 
-#инициализация pygame
 pygame.init()
 
 def spawn_enemystr(person, world, clock):
-    if clock.get_time() % 30000 == 0:
-        if random.randint(0, 1) == 0:
-            world.add_object(Enemystr(person.x, person.y, 1000))
-        else:
-            world.add_object(Enemystr(person.x, person.y, 2000))
+    if random.randint(0, 100) == 0:
+        mobs = 0
+        for i in world.col:
+            if i.damageble:
+                mobs += 1
+        if mobs < 7:
+            dx = random.randint(600, 2000) * (random.random() * 2 - 1)
+            dy = random.randint(500, 1000) * (random.random() * 2 - 1)
+            if person.y > - 400:
+                mob = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10][random.randint(0, 9)]
+            elif person.y <= - 400:
+                mob = ["+", "-", "/"][random.randint(0, 2)]
+            temp = False
+            for i in world.collisions:
+                if abs(i.x - (person.x + dx)) < i.sizex * 2 and abs(i.y - (person.y + dy)) < i.sizey * 2:
+                    if "y+" in i.collision_chek(person.x + dx, person.y + dy, 100, 100):
+                        temp = True
+                        break
+            if temp:
+                world.create_object(Enemystr(person.x + dx, person.y + dy, person, mob))
             
 def craftscreen(screen, clock, inventar):
     craftbtn1 = Button(350, 150, "Sword")
-    craftbtn2 = Button(350, 200, "bow")
+    craftbtn2 = Button(350, 210, "Bow")
     text = Text(350, 100, "craft meny")
     craft1image = pygame.transform.scale(load_image("craft1.png"), (100, 50))
     quitbtn = Button(400, 500, "quit")
-    craft1 = ["1", "+"]
-    craft2 = ["2", "2", "+"]
+    # списки предметов для крафта состоит из списков из двух элементов 1- name требуемого обьекта, 2- количество
+    craft1 = [["1", 1], ["+", 1]]
+    craft2 = [["2", 2], ["+", 1]]
     while True:
         pygame.draw.rect(screen, (50, 50, 50), (300, 100, 300, 500))
         text.display(screen)
@@ -43,14 +58,17 @@ def craftscreen(screen, clock, inventar):
                     isresurs = True
                     delcell = []
                     for i in craft1:
+                        c = 0
                         temporary = False
                         for j in inventar:
                             for k in j:
                                 if k:
-                                    if k.name == i:
-                                        temporary = True
+                                    if k.name == i[0]:
                                         delcell.append([inventar.index(j), j.index(k)])
-                                        break
+                                        c = c + 1
+                                        if c >= i[1]:
+                                            temporary = True
+                                            break
                             if temporary:
                                 break
                         if not temporary:
@@ -66,14 +84,17 @@ def craftscreen(screen, clock, inventar):
                     isresurs = True
                     delcell = []
                     for i in craft2:
+                        c = 0
                         temporary = False
                         for j in inventar:
                             for k in j:
                                 if k:
-                                    if k.name == i:
-                                        temporary = True
+                                    if k.name == i[0]:
                                         delcell.append([inventar.index(j), j.index(k)])
-                                        break
+                                        c = c + 1
+                                        if c >= i[1]:
+                                            temporary = True
+                                            break
                             if temporary:
                                 break
                         if not temporary:
@@ -203,7 +224,7 @@ def open_all(world, slot):
                     world.col[-1].y = float(obj[4])
                     world.col[-1].hp = int(obj[5])
                 elif obj[0] == "Number":
-                    world.create_object(Number(int(obj[1]), float(obj[2]), float(obj[3])))
+                    world.create_object(Number(str(obj[1]), float(obj[2]), float(obj[3])))
                 elif obj[0] == "Enemy":
                     person = world.return_obj(name="person")
                     world.create_object(Enemy(float(obj[1]), float(obj[2]), person))
@@ -228,7 +249,7 @@ def open_all(world, slot):
                         if string[i] != "None" and string[i] != "" and string[i] != " \n":
                             slot = string[i].split()
                             if slot[0] == "Number":
-                                world.col[-1].inventar[j][i] = Number(int(slot[1]), float(slot[2]), float(slot[3]))
+                                world.col[-1].inventar[j][i] = Number((slot[1]), float(slot[2]), float(slot[3]))
                             elif slot[0] == "Sword":
                                 world.col[-1].inventar[j][i] = Example_sword(float(slot[1]), float(slot[2]))
                             elif slot[0] == "ranged_weapon":
@@ -251,18 +272,6 @@ def random_generation(world):
             world.create_collision(
                 Collision_reactangle(-15 * cellx + j * cellx + x, -200 - i * celly - y, 500, 50))
 
-def random_spawn(world, person, a):
-    for i in range(a):
-        dx = random.randint(600, 2000) * (random.random() * 2 - 1)
-        dy = random.randint(500, 1000) * (random.random() * 2 - 1)
-        temp = False
-        for i in world.collisions:
-            if "y+" in i.collision_chek(person.x + dx, person.y + dy, 100, 100):
-                temp = True
-                break
-        if temp:
-            world.create_object(Enemystr(person.x + dx, person.y + dy, person, "2"))
-
 def deadscreen(screen, clock):
     text = Text(400, 200, "you are dead!")
     out = Button(400, 300, "go to menu")
@@ -281,6 +290,7 @@ def deadscreen(screen, clock):
 
 
 if __name__ == '__main__':
+    # инициализация Pygame:
     size = 1000, 800
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
@@ -298,12 +308,11 @@ if __name__ == '__main__':
             if startparam[1]:
                 person = Person(3, 10)
                 world.create_object(person)
-                world.create_object(Number(10, 10, -30))
-                world.create_object(Number(10, 10, -20))
+                world.create_object(Number(2, 10, -30))
+                world.create_object(Number(2, 10, -20))
+                world.create_object(Number("+", 10, -20))
                 world.create_object(Enemystr(900, -100, person, 1))
                 world.create_object(Enemystr(900, -500, person, "+"))
-                world.create_object(Enemystr(900, -800, person, "+"))
-                random_spawn(world, person, 10)
                 slot = startparam[2]
                 world.seed = random.randint(-100000, 100000)
             else:
@@ -320,12 +329,11 @@ if __name__ == '__main__':
             returnd = False  # хранит в себе обьект на который было проиведено нажатие
             while running:
                 # цикл игры, если прервать break то переходит в меню, если прервать с помощью running = False выходит из программы
-                if random.randint(0, 100) == 0:
-                    random_spawn(world, person, 1)
                 x, y = pygame.mouse.get_pos()
                 if not flag and returnd:  # если до этого был обьект который мы двигали а сейчас отпустили убирает у него статус двигается
                     returnd.status_set("move", False)
                 returnd = world.click(x, y)
+                spawn_enemystr(person, world, clock)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
@@ -345,7 +353,7 @@ if __name__ == '__main__':
                                 world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
                                                             (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
                         if returnd:
-                            if returnd.damageble and abs(x - 500) < 300 and abs(y - 600) < 200:
+                            if returnd.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
                                     person.attack(returnd)
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False

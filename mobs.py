@@ -46,7 +46,7 @@ class Enemy:
         c = True
         chek = True
         for i in collision:
-            if abs(i.x - self.x) < i.sizex * 2 and abs(i.y - self.y) < i.sizey * 2:
+            if abs(i.x - self.x) < i.sizex + self.sizex and abs(i.y - self.y) < i.sizey + self.sizey:
                 col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
                 if "x+" in col and self.vx >= 0:
                     self.vx = 0
@@ -166,7 +166,7 @@ class Enemystr:
         c = True
         chek = True
         for i in collision:
-            if abs(i.x - self.x) < i.sizex * 2 and abs(i.y - self.y) < i.sizey * 2:
+            if abs(i.x - self.x) < i.sizex + self.sizex and abs(i.y - self.y) < i.sizey + self.sizey:
                 col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
                 if "x+" in col and self.vx >= 0:
                     self.vx = 0

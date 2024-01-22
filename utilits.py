@@ -77,16 +77,15 @@ class World:
         for i in self.col:
             if abs(i.x - self.camx) < 1000 and abs(i.y - self.camy) < 1000:
                 i.display(int(self.camx), int(self.camy), self.scr, self.collisions)
-            if i.name == "Projectile":
-                i.move()
-                temp = self.click(i.x - self.camx, i.y - self.camy)
-                if temp:
-                    if temp.damageble:
-                        temp.damag(int((i.vx ** 2 + i.vy ** 2) ** 0.5))
-            if i.do[0] == "dead":
-                if i.drop[0] == "Number":
-                    self.create_object(Number(i.drop[1], i.x, i.y))
-                self.del_object(self.col.index(i))
+                if i.name == "Projectile":
+                    temp = self.click(i.x - self.camx, i.y - self.camy)
+                    if temp:
+                        if temp.damageble:
+                            temp.damag(int((i.vx ** 2 + i.vy ** 2) ** 0.5))
+                if i.do[0] == "dead":
+                    if i.drop[0] == "Number":
+                        self.create_object(Number(i.drop[1], i.x, i.y))
+                    self.del_object(self.col.index(i))
 
     def return_obj(self, name="", number=-1):
         # возвращает обьект с именем или с индексом
@@ -142,7 +141,7 @@ class Person:
                 else:
                     enemy.damag(self.use.damage)
             else:
-                enemy.damag(20)
+                enemy.damag(5)
 
     def damag(self, level):
         self.hp -= level
@@ -168,18 +167,19 @@ class Person:
                 self.heal(random.randint(0, 1))
             c = True
             for i in collision:
-                col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-                if "x+" in col and self.vx >= 0:
-                    self.vx = 0
-                elif "x-" in col and self.vx <= 0:
-                    self.vx = 0
-                if "y+" in col and self.vy >= 0:
-                    self.vy = 0
-                    c = False
-                    if self.do[0] != "moveright" and self.do[0] != "moveleft":
+                if abs(i.x - self.x) < i.sizex + self.sizex and abs(i.y - self.y) < i.sizey + self.sizey:
+                    col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+                    if "x+" in col and self.vx >= 0:
                         self.vx = 0
-                elif "y-" in col and self.vy <= 0:
-                    self.vy = 0
+                    elif "x-" in col and self.vx <= 0:
+                        self.vx = 0
+                    if "y+" in col and self.vy >= 0:
+                        self.vy = 0
+                        c = False
+                        if self.do[0] != "moveright" and self.do[0] != "moveleft":
+                            self.vx = 0
+                    elif "y-" in col and self.vy <= 0:
+                        self.vy = 0
             if c:
                 self.status_set("jump", True)
             else:

@@ -98,15 +98,17 @@ class Projectile:
     def display(self, x, y, screen, collisions):
         screen.blit(self.image, (self.x - x, self.y - y))
         for i in collisions:
-            col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-            if "x+" in col and self.vx >= 0:
-                self.status_set("dead", True)
-            elif "x-" in col and self.vx <= 0:
-                self.status_set("dead", True)
-            if "y+" in col and self.vy >= 0:
-                self.status_set("dead", True)
-            elif "y-" in col and self.vy <= 0:
-                self.status_set("dead", True)
+            if abs(i.x - self.x) < i.sizex + self.sizex and abs(i.y - self.y) < i.sizey + self.sizex:
+                col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+                if "x+" in col and self.vx >= 0:
+                    self.status_set("dead", True)
+                elif "x-" in col and self.vx <= 0:
+                    self.status_set("dead", True)
+                if "y+" in col and self.vy >= 0:
+                    self.status_set("dead", True)
+                elif "y-" in col and self.vy <= 0:
+                    self.status_set("dead", True)
+        self.move()
 
 
     def move(self):
@@ -126,8 +128,6 @@ class Projectile:
         elif self.do[0] == do and not status:
             self.do[0] = ""
             self.do[1] = 0
-    def data_return(self):
-        return "Projectile"
 
 
 # Создание класса дальнобойного оружия
