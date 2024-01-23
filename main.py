@@ -120,14 +120,16 @@ def startscreen(screen, clock, massag=""):
     slot1 = Button(100, 100, "1")
     slot2 = Button(200, 100, "2")
     slot3 = Button(300, 100, "3")
+    text = Text(400, 50, "Math.s game")
     back = Button(100, 200, "back")
-    massage = Text(400, 100, massag)
+    massage = Text(400, 150, massag)
     if massage == "":
         massage.set_visible(False)
     meny = 0
     while True:
         screen.fill((0, 0, 0))
         massage.display(screen)
+        text.display(screen)
         if meny == 0:
             nuw.display(screen)
             load.display(screen)
@@ -143,8 +145,10 @@ def startscreen(screen, clock, massag=""):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
                 if nuw.check(x, y) and meny == 0:
+                    text.text_set("select save slot")
                     meny = 1
                 if load.check(x, y) and meny == 0:
+                    text.text_set("select save slot")
                     meny = 2
                 if slot1.check(x, y):
                     if meny == 1:
@@ -164,6 +168,7 @@ def startscreen(screen, clock, massag=""):
                 if QUIT.check(x, y) and meny == 0:
                     return [False]
                 if back.check(x, y) and (meny == 1 or meny == 2):
+                    text.text_set("Math.s game")
                     meny = 0
         pygame.display.flip()
         clock.tick(100)
@@ -310,9 +315,6 @@ if __name__ == '__main__':
             if startparam[1]:
                 person = Person(3, 10)
                 world.create_object(person)
-                world.create_object(Number(2, 10, -30))
-                world.create_object(Number(2, 10, -20))
-                world.create_object(Number("+", 10, -20))
                 world.create_object(Enemystr(900, -100, person, 1))
                 world.create_object(Enemystr(900, -500, person, "+"))
                 slot = startparam[2]

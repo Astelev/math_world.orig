@@ -45,6 +45,10 @@ class Text:
     def set_visible(self, visible):
         self.visible = visible
 
+    def text_set(self, text):
+        font = pygame.font.Font(None, 50)
+        self.text = font.render(text, True, (10, 100, 100))
+
 
 class World:
     def __init__(self, camerax, cameray, screen, objects=[], florcol=(100, 100, 100), backcol=(0, 0, 0)):
