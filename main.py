@@ -16,7 +16,7 @@ def spawn_enemystr(person, world, clock):
             if i.damageble:
                 mobs += 1
         if mobs < 5:
-            dx = random.randint(600, 2000) * (random.random() * 2 - 1)
+            dx = random.randint(1000, 2000) * (random.random() * 2 - 1)
             dy = random.randint(500, 1000) * (random.random() * 2 - 1)
             if person.y > - 400:
                 mob = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10][random.randint(0, 9)]
@@ -298,8 +298,7 @@ def deadscreen(screen, clock):
 
 if __name__ == '__main__':
     # инициализация Pygame:
-    size = 1000, 800
-    screen = pygame.display.set_mode(size)
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     clock = pygame.time.Clock()
     running = True
     massage = ""

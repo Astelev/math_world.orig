@@ -35,7 +35,7 @@ class Enemy:
 
     def display(self, x, y, screen, collision):
         if self.do[0] != "dead":
-            if abs(self.person.x - self.x) < 1000 and abs(self.person.y - self.y) < 500:
+            if abs(self.person.x - self.x) < 1400 and abs(self.person.y - self.y) < 500:
               self.agr()
         if self.do[0] == "attack":
             if self.do[1] < 50:

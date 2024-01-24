@@ -76,20 +76,20 @@ class World:
         g = int(g - (self.camy + 200) * 0.01) % 255
         b = int(b - (self.camy + 200) * 0.02) % 255
         self.scr.fill((r, g, b))
-        self.camx = self.return_obj(self.camera_binding).x - 400
-        self.camy = self.return_obj(self.camera_binding).y - 510
+        self.camx = self.return_obj(self.camera_binding).x - 700
+        self.camy = self.return_obj(self.camera_binding).y - 610
         if self.count < 100:
             self.count += 1
         else:
             self.count = 0
             self.localcollision = []
         for i in self.collisions:
-            if abs(i.x - self.camx) < i.sizex + 1000 and abs(i.y - self.camy) < i.sizey + 1000:
+            if abs(i.x - self.camx) < i.sizex + 1400 and abs(i.y - self.camy) < i.sizey + 1200:
                 i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
-            if self.count == 1 and abs(i.x - self.camx) < i.sizex + 1000 and abs(i.y - self.camy) < i.sizey + 1000:
+            if self.count == 1 and abs(i.x - self.camx) < i.sizex + 1400 and abs(i.y - self.camy) < i.sizey + 1200:
                 self.localcollision.append(i)
         for i in self.col:
-            if abs(i.x - self.camx) < 1000 and abs(i.y - self.camy) < 1000:
+            if abs(i.x - self.camx) < 2000 and abs(i.y - self.camy) < 1220:
                 i.display(int(self.camx), int(self.camy), self.scr, self.localcollision)
                 if i.name == "Projectile":
                     temp = self.click(i.x - self.camx, i.y - self.camy)
