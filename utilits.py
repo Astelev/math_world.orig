@@ -51,7 +51,7 @@ class Text:
 
 
 class World:
-    def __init__(self, camerax, cameray, screen, objects=[], florcol=(100, 100, 100), backcol=(0, 0, 0)):
+    def __init__(self, camerax, cameray, screen,mobmax = 3, objects=[], florcol=(100, 100, 100), backcol=(0, 0, 0)):
         self.seed = 0
         self.florcol = florcol
         self.backcol = backcol
@@ -63,6 +63,7 @@ class World:
         self.camera_binding = "person"  # обьект к которому будет прикреплена камера
         self.localcollision = []
         self.count = 0
+        self.mobmax = mobmax
 
     def create_object(self, object):
         self.col.append(object)

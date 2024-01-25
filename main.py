@@ -15,7 +15,7 @@ def spawn_enemystr(person, world, clock):
         for i in world.col:
             if i.damageble:
                 mobs += 1
-        if mobs < 5:
+        if mobs < world.mobmax:
             dx = random.randint(1000, 2000) * (random.random() * 2 - 1)
             dy = random.randint(500, 1000) * (random.random() * 2 - 1)
             if person.y > - 400:
