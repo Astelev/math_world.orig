@@ -1,9 +1,6 @@
-seed -25641
-Person 3 10 3515 -106.0 400
+seed 22451
+Person 3 10 0 -114.5 400
 inv 3 10
 None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr:  
-Enemystr 2820 -54.5 80 1
-Enemystr 876 -44.0 80 +
-Enemystr 2984.8101331814014 -52.28168711268637 80 7
-Enemystr 2815.564201258509 -59.557424026869256 80 10
-Enemystr 2274.563162947722 -355.44247659673636 80 10
+Enemystr 230 -54.5 80 1
+Enemystr 235 -267.0 80 +
