@@ -79,6 +79,7 @@ def craftscreen(screen, clock, inventar):
                             break
                     if isresurs:
                         inventar[-1][-1] = Example_sword(0, 0)
+                        print("yes")
                         for i in delcell:
                             inventar[i[0]][i[1]] = ""
                         return True
@@ -316,6 +317,8 @@ if __name__ == '__main__':
                 world.create_object(person)
                 world.create_object(Enemystr(900, -100, person, 1))
                 world.create_object(Enemystr(900, -500, person, "+"))
+                world.create_object(Number("+", 200, -100))
+                world.create_object(Number("1", 200, -100))
                 slot = startparam[2]
                 world.seed = random.randint(-100000, 100000)
             else:
@@ -356,7 +359,7 @@ if __name__ == '__main__':
                                 world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
                                                             (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
                         if returnd:
-                            if returnd.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
+                            if returnd.damageble and abs(x - 700) < 200 and abs(y - 650) < 200:
                                     person.attack(returnd)
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False

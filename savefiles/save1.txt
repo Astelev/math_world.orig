@@ -1,6 +1,7 @@
-seed 22451
-Person 3 10 0 -114.5 400
+seed -28683
+Person 3 10 -1395.0 -439.5 400
 inv 3 10
-None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr:  
-Enemystr 230 -54.5 80 1
-Enemystr 235 -267.0 80 +
+None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;Sword 0.0 0.0; :nextstr:  
+Enemystr -1380.0 -54.0 80 1
+Enemystr -1405.0 -51.0 80 +
+Enemystr -1382.9294679058412 -54.985202076449184 80 10
