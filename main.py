@@ -317,8 +317,6 @@ if __name__ == '__main__':
                 world.create_object(person)
                 world.create_object(Enemystr(900, -100, person, 1))
                 world.create_object(Enemystr(900, -500, person, "+"))
-                world.create_object(Number("+", 200, -100))
-                world.create_object(Number("1", 200, -100))
                 slot = startparam[2]
                 world.seed = random.randint(-100000, 100000)
             else:
@@ -356,8 +354,8 @@ if __name__ == '__main__':
                             if person.use.Ranged:
                                 person.attack(0)
                                 world.create_object(Projectile(person.x, person.y, 20))
-                                world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
-                                                            (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
+                                world.col[-1].set_direction((x - 700) / ((x - 700) ** 2 + (610 - y) ** 2) ** 0.5,
+                                                            (610 - y) / -(((x - 700) ** 2 + (610 - y) ** 2) ** 0.5))
                         if returnd:
                             if returnd.damageble and abs(x - 700) < 200 and abs(y - 650) < 200:
                                     person.attack(returnd)
