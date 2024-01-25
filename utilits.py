@@ -85,7 +85,7 @@ class World:
             self.count = 0
             self.localcollision = []
         for i in self.collisions:
-            if abs(i.x - self.camx) < i.sizex + 1500 and abs(i.y - self.camy) < i.sizey + 1200:
+            if abs(i.x - self.camx) < i.sizex + 1600 and abs(i.y - self.camy) < i.sizey + 1200:
                 i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
             if self.count == 1 and abs(i.x - self.camx) < i.sizex + 1400 and abs(i.y - self.camy) < i.sizey + 1200:
                 self.localcollision.append(i)
