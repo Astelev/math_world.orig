@@ -20,8 +20,10 @@ def spawn_enemystr(person, world, clock):
             dy = random.randint(500, 1000) * (random.random() * 2 - 1)
             if person.y > - 400:
                 mob = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10][random.randint(0, 9)]
-            elif person.y <= - 400:
-                mob = ["+", "-", "/"][random.randint(0, 2)]
+            elif -1000 <= person.y <= - 400:
+                mob = ["+", "-"][random.randint(0, 1)]
+            elif person.y < -1000:
+                mob = ["+", "-", "/", "/"][random.randint(0, 3)]
             temp = False
             for i in world.collisions:
                 if abs(i.x - (person.x + dx)) < i.sizex * 2 and abs(i.y - (person.y + dy)) < i.sizey * 2:
@@ -30,7 +32,37 @@ def spawn_enemystr(person, world, clock):
                         break
             if temp:
                 world.create_object(Enemystr(person.x + dx, person.y + dy, person, mob))
-            
+
+
+def craft_chek(inventar, recipe):
+    isresurs = True
+    delcell = []
+    for i in recipe:
+        c = 0
+        temporary = False
+        for j in inventar:
+            for k in j:
+                if k:
+                    if k.name == i[0]:
+                        delcell.append([inventar.index(j), j.index(k)])
+                        c = c + 1
+                        if c >= i[1]:
+                            temporary = True
+                            break
+            if temporary:
+                break
+        if not temporary:
+            isresurs = False
+            # нет ресов
+            break
+    if isresurs:
+        for i in delcell:
+            inventar[i[0]][i[1]] = ""
+        return True
+    else:
+        return False
+
+
 def craftscreen(screen, clock, inventar):
     craftbtn1 = Button(350, 150, "Sword")
     craftbtn2 = Button(350, 210, "Bow")
@@ -57,57 +89,12 @@ def craftscreen(screen, clock, inventar):
                 if quitbtn.check(x,y):
                     return True
                 elif craftbtn1.check(x, y):
-                    isresurs = True
-                    delcell = []
-                    for i in craft1:
-                        c = 0
-                        temporary = False
-                        for j in inventar:
-                            for k in j:
-                                if k:
-                                    if k.name == i[0]:
-                                        delcell.append([inventar.index(j), j.index(k)])
-                                        c = c + 1
-                                        if c >= i[1]:
-                                            temporary = True
-                                            break
-                            if temporary:
-                                break
-                        if not temporary:
-                            isresurs = False
-                            # нет ресов
-                            break
-                    if isresurs:
+                    if craft_chek(inventar, craft1):
                         inventar[-1][-1] = Example_sword(0, 0)
-                        print("yes")
-                        for i in delcell:
-                            inventar[i[0]][i[1]] = ""
                         return True
                 elif craftbtn2.check(x, y):
-                    isresurs = True
-                    delcell = []
-                    for i in craft2:
-                        c = 0
-                        temporary = False
-                        for j in inventar:
-                            for k in j:
-                                if k:
-                                    if k.name == i[0]:
-                                        delcell.append([inventar.index(j), j.index(k)])
-                                        c = c + 1
-                                        if c >= i[1]:
-                                            temporary = True
-                                            break
-                            if temporary:
-                                break
-                        if not temporary:
-                            isresurs = False
-                            # нет ресов
-                            break
-                    if isresurs:
+                    if craft_chek(inventar, craft2):
                         inventar[-1][-1] = RangedWeapon(0, 0)
-                        for i in delcell:
-                            inventar[i[0]][i[1]] = ""
                         return True
         pygame.display.flip()
 
@@ -299,14 +286,14 @@ def deadscreen(screen, clock):
 
 if __name__ == '__main__':
     # инициализация Pygame:
-    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #
     clock = pygame.time.Clock()
     running = True
     massage = ""
     while True:
         startparam = startscreen(screen, clock, massage)
         if startparam[0]:
-            world = World(0, 0, screen)
+            world = World(0, 0, screen, (screen.get_width(), screen.get_height()))
             world.col = []
             world.collisions = []
             world.create_collision(Collision_reactangle(-100000, 10, 200000, 1000))
@@ -354,10 +341,10 @@ if __name__ == '__main__':
                             if person.use.Ranged:
                                 person.attack(0)
                                 world.create_object(Projectile(person.x, person.y, 20))
-                                world.col[-1].set_direction((x - 700) / ((x - 700) ** 2 + (610 - y) ** 2) ** 0.5,
-                                                            (610 - y) / -(((x - 700) ** 2 + (610 - y) ** 2) ** 0.5))
+                                world.col[-1].set_direction((x - world.size[0] // 2) / ((x - world.size[0] // 2) ** 2 + (world.size[1] // 2610 - y) ** 2) ** 0.5,
+                                                            (world.size[1] // 2 - y) / -(((x - world.size[0] // 2) ** 2 + (world.size[1] // 2 - y) ** 2) ** 0.5))
                         if returnd:
-                            if returnd.damageble and abs(x - 700) < 200 and abs(y - 650) < 200:
+                            if returnd.damageble and abs(x - world.size[0] // 2) < 200 and abs(y - world.size[1] // 2) < 200:
                                     person.attack(returnd)
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False

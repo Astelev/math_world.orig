@@ -141,6 +141,12 @@ class Enemystr:
         self.speed = random.randint(3,5)
         self.do = ["", 0]
         self.hp = 80
+        self.hpmax = 80
+        self.damage = 50
+        if self.name == "/":
+            self.hp = 150
+            self.hpmax = 150
+            self.damage = 100
         self.movable = False
         self.damageble = True
         self.drop = ["Number", str(self.c)]
@@ -165,30 +171,31 @@ class Enemystr:
         c = True
         chek = True
         for i in collision:
-            col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
-            if "x+" in col and self.vx >= 0:
-                self.vx = 0
-                if self.do[0] != "jump":
-                    self.vy = -13.5
-            elif "x-" in col and self.vx <= 0:
-                self.vx = 0
-                if self.do[0] != "jump":
-                    self.vy = -13.5
-            if "y+" in col and self.vy >= 0:
-                self.vy = 0
-                c = False
-                if self.do[0] != "moveright" and self.do[0] != "moveleft":
+            if abs(i.x - self.x) < i.sizex + self.sizex and abs(i.y - self.y) < i.sizey + self.sizey:
+                col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
+                if "x+" in col and self.vx >= 0:
                     self.vx = 0
-            elif "y-" in col and self.vy <= 0:
-                self.vy = 0
-            if self.do[0] != "jump":
-                colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey + 150)
-                colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey + 150)
-                if ("y+" in colleft and self.person.x < self.x) or (
-                      "y+" in colright and self.person.x > self.x):
+                    if self.do[0] != "jump":
+                        self.vy = -13.5
+                elif "x-" in col and self.vx <= 0:
+                    self.vx = 0
+                    if self.do[0] != "jump":
+                        self.vy = -13.5
+                if "y+" in col and self.vy >= 0:
+                    self.vy = 0
+                    c = False
+                    if self.do[0] != "moveright" and self.do[0] != "moveleft":
+                        self.vx = 0
+                elif "y-" in col and self.vy <= 0:
+                    self.vy = 0
+                if self.do[0] != "jump":
+                    colleft = i.collision_chek(self.x - 20, self.y, 0, self.sizey + 150)
+                    colright = i.collision_chek(self.x + 20, self.y, self.sizex, self.sizey + 150)
+                    if ("y+" in colleft and self.person.x < self.x) or (
+                          "y+" in colright and self.person.x > self.x):
+                        chek = False
+                else:
                     chek = False
-            else:
-                chek = False
         if chek:
             self.vx = 0
         if c:
@@ -203,7 +210,7 @@ class Enemystr:
         text = font.render(str(self.c), True, (255, 255, 255))
         screen.blit(text, (self.x - x, self.y - y))
         pygame.draw.rect(screen, (255, 255, 255), (self.x - x, self.y - y - 20, self.hp // 2, 10))
-        pygame.draw.rect(screen, (0, 100, 100), (self.x - x - 3, self.y - y - 23, 46, 16), 1)
+        pygame.draw.rect(screen, (0, 100, 100), (self.x - x - 3, self.y - y - 23, self.hpmax // 2 + 6, 16), 1)
 
     def agr(self):
         if abs(self.person.x - self.x) > 60:
