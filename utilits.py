@@ -149,17 +149,26 @@ class Person:
         self.use = False
         self.usenum = 0
 
-    def attack(self, enemy):
+    def attack(self, enemy = 0):
         self.status_set("attack", True)
         if self.do[1] == 0:
-            self.do[1] = 20
             if self.use:
                 if self.use.Ranged:
-                    return True
-                else:
+                    self.do[1] = 20
+                    temp = self.use.returnProjectile()
+                    temp.x = self.x
+                    temp.y = self.y
+                    return temp
+                elif enemy != 0:
+                    self.do[1] = 20
                     enemy.damag(self.use.damage)
-            else:
+                else:
+                    return False
+            elif enemy != 0:
+                self.do[1] = 20
                 enemy.damag(5)
+            else:
+                return False
 
     def damag(self, level):
         self.hp -= level

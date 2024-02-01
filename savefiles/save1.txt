@@ -1,5 +1,8 @@
-seed 25667
-Person 3 10 640 -420.0 400
+seed -49362
+Person 3 10 -795 -425.0 363
 inv 3 10
 None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr:  
-Enemystr -1702.03587468391 -1256.012449583255 150 /
+Enemystr -795 -54.0 80 1
+Enemystr 410 -362.0 80 +
+ranged_weapon 100 -100
+Enemystr -288.42970362717426 -366.3856691428705 80 2

@@ -304,6 +304,7 @@ if __name__ == '__main__':
                 world.create_object(person)
                 world.create_object(Enemystr(900, -100, person, 1))
                 world.create_object(Enemystr(900, -500, person, "+"))
+                world.create_object(RangedWeapon(100, -100))
                 slot = startparam[2]
                 world.seed = random.randint(-100000, 100000)
             else:
@@ -337,14 +338,17 @@ if __name__ == '__main__':
                         elif btncraft.check(x, y):
                             if not craftscreen(screen, clock, person.inventar):
                                 running = False
-                        elif person.use:
-                            if person.use.Ranged:
-                                person.attack(0)
-                                world.create_object(Projectile(person.x, person.y, 20))
-                                world.col[-1].set_direction((x - world.size[0] // 2) / ((x - world.size[0] // 2) ** 2 + (world.size[1] // 2610 - y) ** 2) ** 0.5,
-                                                            (world.size[1] // 2 - y) / -(((x - world.size[0] // 2) ** 2 + (world.size[1] // 2 - y) ** 2) ** 0.5))
-                        if returnd:
-                            if returnd.damageble and abs(x - world.size[0] // 2) < 200 and abs(y - world.size[1] // 2) < 200:
+                        else:
+                            Projectile = person.attack()
+                            if Projectile:
+                                world.create_object(Projectile)
+                                world.col[-1].set_direction((x - world.size[0] // 2) / (
+                                            (x - world.size[0] // 2) ** 2 + (world.size[1] // 2610 - y) ** 2) ** 0.5,
+                                                            (world.size[1] // 2 - y) / -(((x - world.size[
+                                                                0] // 2) ** 2 + (world.size[1] // 2 - y) ** 2) ** 0.5))
+                            elif returnd:
+                                if returnd.damageble and abs(x - world.size[0] // 2) < 200 and abs(y - world.size[1] // 2) < 200:
+                                    print("a")
                                     person.attack(returnd)
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False
