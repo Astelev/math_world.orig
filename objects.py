@@ -167,6 +167,9 @@ class RangedWeapon:
             self.do[0] = ""
             self.do[1] = 0
 
+    def returnProjectile(self):
+        return Projectile(0, 0, self.damage)
+
     def data_return(self):
         return "ranged_weapon" + " " + str(self.x) + " " + str(self.y)
 

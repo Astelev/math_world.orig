@@ -51,7 +51,7 @@ class Text:
 
 
 class World:
-    def __init__(self, camerax, cameray, screen, objects=[], florcol=(100, 100, 100), backcol=(0, 0, 0)):
+    def __init__(self, camerax, cameray, screen, size = (1920, 1080) , mobmax=3, objects=[], florcol=(100, 100, 100), backcol=(0, 0, 0)):
         self.seed = 0
         self.florcol = florcol
         self.backcol = backcol
@@ -63,6 +63,8 @@ class World:
         self.camera_binding = "person"  # обьект к которому будет прикреплена камера
         self.localcollision = []
         self.count = 0
+        self.mobmax = mobmax
+        self.size = size
 
     def create_object(self, object):
         self.col.append(object)
@@ -76,20 +78,20 @@ class World:
         g = int(g - (self.camy + 200) * 0.01) % 255
         b = int(b - (self.camy + 200) * 0.02) % 255
         self.scr.fill((r, g, b))
-        self.camx = self.return_obj(self.camera_binding).x - 400
-        self.camy = self.return_obj(self.camera_binding).y - 510
-        if self.count < 100:
+        self.camx = self.return_obj(self.camera_binding).x - self.size[0]//2
+        self.camy = self.return_obj(self.camera_binding).y - self.size[1]//2
+        if self.count < 50:
             self.count += 1
         else:
             self.count = 0
             self.localcollision = []
         for i in self.collisions:
-            if abs(i.x - self.camx) < i.sizex + 1000 and abs(i.y - self.camy) < i.sizey + 1000:
+            if abs(i.x - self.camx) < i.sizex + self.size[0] + 200 and abs(i.y - self.camy) < i.sizey + self.size[1] + 400:
                 i.display(int(self.camx), int(self.camy), self.scr, self.florcol)
-            if self.count == 1 and abs(i.x - self.camx) < i.sizex + 1000 and abs(i.y - self.camy) < i.sizey + 1000:
-                self.localcollision.append(i)
+                if self.count == 1:
+                    self.localcollision.append(i)
         for i in self.col:
-            if abs(i.x - self.camx) < 1000 and abs(i.y - self.camy) < 1000:
+            if abs(i.x - self.camx) < self.size[0] + 100 and abs(i.y - self.camy) < self.size[1] + 100:
                 i.display(int(self.camx), int(self.camy), self.scr, self.localcollision)
                 if i.name == "Projectile":
                     temp = self.click(i.x - self.camx, i.y - self.camy)
@@ -100,6 +102,8 @@ class World:
                     if i.drop[0] == "Number":
                         self.create_object(Number(i.drop[1], i.x, i.y))
                     self.del_object(self.col.index(i))
+            elif (abs(i.x - self.camx) > 3000 or abs(i.y - self.camy) > 3000) and i.damageble:
+                self.del_object(self.col.index(i))
 
     def return_obj(self, name="", number=-1):
         # возвращает обьект с именем или с индексом
@@ -145,23 +149,26 @@ class Person:
         self.use = False
         self.usenum = 0
 
-    def attack(self, enemy, x, y, world):
+    def attack(self, enemy = 0):
         self.status_set("attack", True)
         if self.do[1] == 0:
             if self.use:
-                self.do[1] = self.use.rollback
                 if self.use.Ranged:
-                    world.create_object(self.use.Projectileret(self.x, self.y))
-                    world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
-                                                (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
-                elif enemy:
-                    if enemy.damageble and abs(x - 500) < self.use.dist and abs(y - 600) < self.use.dist:
-                        enemy.damag(self.use.damage)
-            else:
+                    self.do[1] = 20
+                    temp = self.use.returnProjectile()
+                    temp.x = self.x
+                    temp.y = self.y
+                    return temp
+                elif enemy != 0:
+                    self.do[1] = 20
+                    enemy.damag(self.use.damage)
+                else:
+                    return False
+            elif enemy != 0:
                 self.do[1] = 20
-                if enemy:
-                    if enemy.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
-                        enemy.damag(5)
+                enemy.damag(5)
+            else:
+                return False
 
     def damag(self, level):
         self.hp -= level
