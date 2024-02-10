@@ -56,6 +56,8 @@ class Example_sword:
         self.usable = True
         self.Ranged = False
         self.damage = 40
+        self.rollback = 50
+        self.dist = 250
 
     def display(self, x, y, screen, colis):
         screen.blit(self.image, (self.x - x, self.y - y))
@@ -144,6 +146,7 @@ class RangedWeapon:
         self.usable = True
         self.Ranged = True
         self.damage = 40
+        self.rollback = 50
 
     def display(self, x, y, screen, colis):
         screen.blit(self.image, (self.x - x, self.y - y))
@@ -166,3 +169,6 @@ class RangedWeapon:
 
     def data_return(self):
         return "ranged_weapon" + " " + str(self.x) + " " + str(self.y)
+
+    def Projectileret(self, x, y):
+        return Projectile(x, y, self.damage)

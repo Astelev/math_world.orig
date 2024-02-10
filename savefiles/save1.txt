@@ -1,13 +1,13 @@
 seed -15363
-Person 3 10 250 -320.5 400
+Person 3 10 710.0 -437.5 400
 inv 3 10
-None;None;None;None;None;None;ranged_weapon 125 -853.5;None;None;None; :nextstr: None;None;None;None;Number 2 78 -601.5;None;None;None;Number 2 -182 -584.5;Number + 265 -803.5; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr:  
-Enemystr 195 -54.5 80 1
-Enemystr 268.0570740846873 -52.81977762987668 80 3
-Enemystr 193.12969167392333 -53.57440147440289 80 6
-Enemystr 215.88758245227473 -57.207624239123874 80 3
-Enemystr 264.8204862663341 -53.300395971908955 80 9
-Enemystr 1176.129473453571 -916.4012960468153 80 1
-Enemystr 195.70514106662472 -59.199547888230455 80 9
+None;None;None;None;None;None;ranged_weapon 3.0 10.0;None;None;None; :nextstr: None;None;None;None;Number 2 78.0 -601.5;None;None;None;Number 2 -182.0 -584.5;Number + 265.0 -803.5; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr:  
+Enemystr 744.0 -54.5 80 1
+Enemystr 727.0570740846873 -52.81977762987668 80 3
+Enemystr 661.1296916739234 -53.57440147440289 80 6
+Enemystr 740.8875824522747 -57.207624239123874 80 3
+Enemystr 726.8204862663341 -53.300395971908955 80 9
+Enemystr 891.1294734535711 -601.4012960468153 80 1
+Enemystr 659.7051410666247 -59.199547888230455 80 9
 Enemystr -2078.164073254061 -680.3544709524865 80 2
-Enemystr 262.4770187160259 -598.0853200339143 80 9
+Number 9 404.0 -274.5
