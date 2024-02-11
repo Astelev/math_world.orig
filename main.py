@@ -298,15 +298,15 @@ def deadscreen(screen, clock):
 
 if __name__ == '__main__':
     # инициализация Pygame:
-    size = 1000, 800
-    screen = pygame.display.set_mode(size)
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    size = screen.get_size()
     clock = pygame.time.Clock()
     running = True
     massage = ""
     while True:
         startparam = startscreen(screen, clock, massage)
         if startparam[0]:
-            world = World(0, 0, screen)
+            world = World(0, 0, screen, size)
             world.col = []
             world.collisions = []
             world.create_collision(Collision_reactangle(-100000, 10, 200000, 1000))

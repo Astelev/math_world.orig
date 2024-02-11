@@ -156,15 +156,15 @@ class Person:
                 self.do[1] = self.use.rollback
                 if self.use.Ranged:
                     world.create_object(self.use.Projectileret(self.x, self.y))
-                    world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
-                                                (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
+                    world.col[-1].set_direction((x - world.size[0]//2) / ((x - world.size[0]//2) ** 2 + (world.size[1]//2 - y) ** 2) ** 0.5,
+                                                (world.size[1]//2 - y) / -(((x - world.size[0]//2) ** 2 + (world.size[1]//2 - y) ** 2) ** 0.5))
                 elif enemy:
                     if enemy.damageble and abs(x - 500) < self.use.dist and abs(y - 600) < self.use.dist:
                         enemy.damag(self.use.damage)
             else:
                 self.do[1] = 20
                 if enemy:
-                    if enemy.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
+                    if enemy.damageble and abs(x - world.size[0]//2) < 200 and abs(y - world.size[1]//2) < 200:
                         enemy.damag(5)
 
     def damag(self, level):
