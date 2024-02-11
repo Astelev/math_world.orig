@@ -149,26 +149,23 @@ class Person:
         self.use = False
         self.usenum = 0
 
-    def attack(self, enemy = 0):
+    def attack(self, enemy, x, y, world):
         self.status_set("attack", True)
         if self.do[1] == 0:
             if self.use:
+                self.do[1] = self.use.rollback
                 if self.use.Ranged:
-                    self.do[1] = 20
-                    temp = self.use.returnProjectile()
-                    temp.x = self.x
-                    temp.y = self.y
-                    return temp
-                elif enemy != 0:
-                    self.do[1] = 20
-                    enemy.damag(self.use.damage)
-                else:
-                    return False
-            elif enemy != 0:
-                self.do[1] = 20
-                enemy.damag(5)
+                    world.create_object(self.use.Projectileret(self.x, self.y))
+                    world.col[-1].set_direction((x - 450) / ((x - 450) ** 2 + (500 - y) ** 2) ** 0.5,
+                                                (500 - y) / -(((x - 450) ** 2 + (500 - y) ** 2) ** 0.5))
+                elif enemy:
+                    if enemy.damageble and abs(x - 500) < self.use.dist and abs(y - 600) < self.use.dist:
+                        enemy.damag(self.use.damage)
             else:
-                return False
+                self.do[1] = 20
+                if enemy:
+                    if enemy.damageble and abs(x - 500) < 200 and abs(y - 600) < 200:
+                        enemy.damag(5)
 
     def damag(self, level):
         self.hp -= level
