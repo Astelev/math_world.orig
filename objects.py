@@ -175,3 +175,52 @@ class RangedWeapon:
 
     def Projectileret(self, x, y):
         return Projectile(x, y, self.damage)
+
+class Expression:
+    def __init__(self, x, y, size=50, name="="):
+        self.name = name
+        self.left = []
+        self.right = []
+        self.x = x
+        self.y = y
+        self.sizex = size * (len(self.right) + len(self.left)) + 50
+        self.sizey = size
+        self.do = ["", 0]
+        self.movable = True
+        self.damageble = False
+        self.usable = False
+
+    def display(self, x, y, screen, colis):
+        font = pygame.font.Font(None, self.sizey)
+        text = font.render(" ".join([i.name for i in self.left]) + " = " + " ".join([i.name for i in self.right]), True, (255, 255, 255))
+        screen.blit(text, (self.x - x, self.y - y))
+
+    def display_into_inventar(self, screen, x, y, sizex, sizey):
+        font = pygame.font.Font(None, sizex - 2)
+        text = font.render("=", True, (255, 255, 255))
+        screen.blit(text, (x, y))
+
+    def moveing(self, x, y, camx, camy):
+        self.x = camx + x - self.sizex // 2
+        self.y = camy + y - self.sizey // 2
+        self.status_set("move", True)
+
+    def status_set(self, do, status=True):
+        # задать статус для анимаций
+        if status:
+            self.do[0] = do
+        elif self.do[0] == do and not status:
+            self.do[0] = ""
+            self.do[1] = 0
+
+    def add(self, obj, x, y):
+        if x < self.x + 25:
+            i = (self.x + 25 - x) // self.sizey
+            self.left.insert(int(i), obj)
+        else:
+            i = (x - (self.x + 25)) // self.sizey
+            self.right.insert(int(i), obj)
+        self.sizex = self.sizex * (len(self.right) + len(self.left))
+
+    def data_return(self):
+        return "Expression" + " " + str(self.x) + " " + str(self.y)

@@ -3,7 +3,7 @@ import os
 import sys
 from utilits import World, Person, Collision_reactangle, Button, Text
 from mobs import Enemy, Enemystr
-from objects import Example_sword, Number, RangedWeapon, Projectile
+from objects import Example_sword, Number, RangedWeapon, Projectile, Expression
 from imagefunk import load_image, Anim
 import random
 
@@ -34,20 +34,25 @@ def spawn_enemystr(person, world, clock):
 def craftscreen(screen, clock, inventar):
     craftbtn1 = Button(350, 150, "Sword")
     craftbtn2 = Button(350, 210, "Bow")
+    craftbtn3 = Button(350, 270, "=")
     text = Text(350, 100, "craft meny")
     craft1image = pygame.transform.scale(load_image("craft1.png"), (100, 50))
     craft2image = pygame.transform.scale(load_image("craft2.png"), (100, 50))
+    craft3image = pygame.transform.scale(load_image("craft3.png"), (100, 50))
     quitbtn = Button(400, 500, "quit")
     # списки предметов для крафта состоит из списков из двух элементов 1- name требуемого обьекта, 2- количество
     craft1 = [["1", 1], ["+", 1]]
     craft2 = [["2", 2], ["+", 1]]
+    craft3 = [["/", 2]]
     while True:
         pygame.draw.rect(screen, (50, 50, 50), (300, 100, 300, 500))
         text.display(screen)
         screen.blit(craft1image, (470, 150))
         screen.blit(craft2image, (470, 210))
+        screen.blit(craft3image, (470, 270))
         craftbtn1.display(screen)
         craftbtn2.display(screen)
+        craftbtn3.display(screen)
         quitbtn.display(screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -105,6 +110,32 @@ def craftscreen(screen, clock, inventar):
                             break
                     if isresurs:
                         inventar[-1][-1] = RangedWeapon(0, 0)
+                        for i in delcell:
+                            inventar[i[0]][i[1]] = ""
+                        return True
+                elif craftbtn3.check(x, y):
+                    isresurs = True
+                    delcell = []
+                    for i in craft3:
+                        c = 0
+                        temporary = False
+                        for j in inventar:
+                            for k in j:
+                                if k:
+                                    if k.name == i[0]:
+                                        delcell.append([inventar.index(j), j.index(k)])
+                                        c = c + 1
+                                        if c >= i[1]:
+                                            temporary = True
+                                            break
+                            if temporary:
+                                break
+                        if not temporary:
+                            isresurs = False
+                            # нет ресов
+                            break
+                    if isresurs:
+                        inventar[-1][-1] = Expression(0, 0)
                         for i in delcell:
                             inventar[i[0]][i[1]] = ""
                         return True
@@ -244,6 +275,8 @@ def open_all(world, slot):
                     person = world.return_obj(name="person")
                     world.create_object(Enemystr(float(obj[1]), float(obj[2]), person, obj[4]))
                     world.col[-1].hp = int(obj[3])
+                elif obj[0] == "Expression":
+                    world.create_object(Expression(float(obj[1]), float(obj[2])))
                 elif obj[0] == "inv":
                     mode = False
                     row = obj[1]
@@ -261,6 +294,8 @@ def open_all(world, slot):
                                 world.col[-1].inventar[j][i] = Example_sword(float(slot[1]), float(slot[2]))
                             elif slot[0] == "ranged_weapon":
                                 world.col[-1].inventar[j][i] = RangedWeapon(float(obj[1]), float(obj[2]))
+                            elif slot[0] == "Expression":
+                                world.col[-1].inventar[j][i] = Expression(float(obj[1]), float(obj[2]))
                 mode = True
         f.close()
         return True
@@ -341,7 +376,7 @@ if __name__ == '__main__':
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
-                    if event.type == pygame.MOUSEBUTTONDOWN and person.do[0] != "dead":
+                    if event.type == pygame.MOUSEBUTTONDOWN:
                         flag = True
                         if x < person.sizeinventarx and y < person.sizeinventary:
                             returnd = person.get_it(x, y)
@@ -354,9 +389,17 @@ if __name__ == '__main__':
                             person.attack(returnd, x, y, world)
                     if event.type == pygame.MOUSEBUTTONUP:
                         flag = False
-                        if returnd and x < person.sizeinventarx and y < person.sizeinventary:
-                            if person.put(x, y, returnd):
-                                world.del_object(world.col.index(returnd))
+                        if returnd:
+                            if x < person.sizeinventarx and y < person.sizeinventary:
+                                if person.put(x, y, returnd):
+                                    world.del_object(world.col.index(returnd))
+                            else:
+                                click = world.click(x+5, y + 30)
+                                if click and returnd.name != "=":
+                                    print(click.name)
+                                    if click.name == "=":
+                                        click.add(returnd, x, y)
+
                     if event.type == pygame.KEYDOWN and person.do[0] != "dead":
                         if event.key == 32:
                             person.jump()
