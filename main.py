@@ -21,7 +21,7 @@ def spawn_enemystr(person, world, clock):
             if person.y > - 400:
                 mob = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10][random.randint(0, 9)]
             elif person.y <= - 400:
-                mob = ["+", "-", "/"][random.randint(0, 2)]
+                mob = ["+", "/"][random.randint(0, 1)]
             temp = False
             for i in world.collisions:
                 if abs(i.x - (person.x + dx)) < i.sizex * 2 and abs(i.y - (person.y + dy)) < i.sizey * 2:
@@ -35,24 +35,34 @@ def craftscreen(screen, clock, inventar):
     craftbtn1 = Button(350, 150, "Sword")
     craftbtn2 = Button(350, 210, "Bow")
     craftbtn3 = Button(350, 270, "=")
+    craftbtn4 = Button(350, 330, "-")
+    craftbtn5 = Button(350, 390, "×")
     text = Text(350, 100, "craft meny")
     craft1image = pygame.transform.scale(load_image("craft1.png"), (100, 50))
     craft2image = pygame.transform.scale(load_image("craft2.png"), (100, 50))
     craft3image = pygame.transform.scale(load_image("craft3.png"), (100, 50))
+    craft4image = pygame.transform.scale(load_image("craft4.png"), (100, 50))
+    craft5image = pygame.transform.scale(load_image("craft5.png"), (100, 50))
     quitbtn = Button(400, 500, "quit")
     # списки предметов для крафта состоит из списков из двух элементов 1- name требуемого обьекта, 2- количество
     craft1 = [["1", 1], ["+", 1]]
     craft2 = [["2", 2], ["+", 1]]
     craft3 = [["/", 2]]
+    craft4 = [["/", 1]]
+    craft5 = [["+", 1]]
     while True:
         pygame.draw.rect(screen, (50, 50, 50), (300, 100, 300, 500))
         text.display(screen)
         screen.blit(craft1image, (470, 150))
         screen.blit(craft2image, (470, 210))
         screen.blit(craft3image, (470, 270))
+        screen.blit(craft4image, (470, 330))
+        screen.blit(craft5image, (470, 390))
         craftbtn1.display(screen)
         craftbtn2.display(screen)
         craftbtn3.display(screen)
+        craftbtn4.display(screen)
+        craftbtn5.display(screen)
         quitbtn.display(screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -136,6 +146,58 @@ def craftscreen(screen, clock, inventar):
                             break
                     if isresurs:
                         inventar[-1][-1] = Expression(0, 0)
+                        for i in delcell:
+                            inventar[i[0]][i[1]] = ""
+                        return True
+                elif craftbtn4.check(x, y):
+                    isresurs = True
+                    delcell = []
+                    for i in craft4:
+                        c = 0
+                        temporary = False
+                        for j in inventar:
+                            for k in j:
+                                if k:
+                                    if k.name == i[0]:
+                                        delcell.append([inventar.index(j), j.index(k)])
+                                        c = c + 1
+                                        if c >= i[1]:
+                                            temporary = True
+                                            break
+                            if temporary:
+                                break
+                        if not temporary:
+                            isresurs = False
+                            # нет ресов
+                            break
+                    if isresurs:
+                        inventar[-1][-1] = Number("-", 0, 0)
+                        for i in delcell:
+                            inventar[i[0]][i[1]] = ""
+                        return True
+                elif craftbtn5.check(x, y):
+                    isresurs = True
+                    delcell = []
+                    for i in craft5:
+                        c = 0
+                        temporary = False
+                        for j in inventar:
+                            for k in j:
+                                if k:
+                                    if k.name == i[0]:
+                                        delcell.append([inventar.index(j), j.index(k)])
+                                        c = c + 1
+                                        if c >= i[1]:
+                                            temporary = True
+                                            break
+                            if temporary:
+                                break
+                        if not temporary:
+                            isresurs = False
+                            # нет ресов
+                            break
+                    if isresurs:
+                        inventar[-1][-1] = Number("×", 0, 0)
                         for i in delcell:
                             inventar[i[0]][i[1]] = ""
                         return True
@@ -262,7 +324,10 @@ def open_all(world, slot):
                     world.col[-1].y = float(obj[4])
                     world.col[-1].hp = int(obj[5])
                 elif obj[0] == "Number":
-                    world.create_object(Number(str(obj[1]), float(obj[2]), float(obj[3])))
+                    if obj[1] == "*":
+                        world.create_object(Number("×", float(obj[2]), float(obj[3])))
+                    else:
+                        world.create_object(Number(str(obj[1]), float(obj[2]), float(obj[3])))
                 elif obj[0] == "Enemy":
                     person = world.return_obj(name="person")
                     world.create_object(Enemy(float(obj[1]), float(obj[2]), person))
@@ -273,7 +338,10 @@ def open_all(world, slot):
                     world.create_object(RangedWeapon(float(obj[1]), float(obj[2])))
                 elif obj[0] == "Enemystr":
                     person = world.return_obj(name="person")
-                    world.create_object(Enemystr(float(obj[1]), float(obj[2]), person, obj[4]))
+                    if obj[4] == "*":
+                        world.create_object(Enemystr(float(obj[1]), float(obj[2]), person, "×"))
+                    else:
+                        world.create_object(Enemystr(float(obj[1]), float(obj[2]), person, obj[4]))
                     world.col[-1].hp = int(obj[3])
                 elif obj[0] == "Expression":
                     world.create_object(Expression(float(obj[1]), float(obj[2])))

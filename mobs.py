@@ -230,5 +230,9 @@ class Enemystr:
         if self.hp <= 0:
             self.status_set("dead", True)
     def data_return(self):
-        return "Enemystr" + " " + str(self.x) + " " + \
-          str(self.y) + " " + str(self.hp) + " " + str(self.c)
+        if self.c == "×":
+            return "Enemystr" + " " + str(self.x) + " " + \
+              str(self.y) + " " + str(self.hp) + " " + "*"
+        else:
+            return "Enemystr" + " " + str(self.x) + " " + \
+                str(self.y) + " " + str(self.hp) + " " + str(self.c)

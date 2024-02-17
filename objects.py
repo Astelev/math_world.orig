@@ -39,8 +39,10 @@ class Number:
             self.do[1] = 0
 
     def data_return(self):
-        return "Number" + " " + str(self.c) + " " + str(self.x) + " " + str(self.y)
-
+        if self.c == "×":
+            return "Number" + " " + "*" + " " + str(self.x) + " " + str(self.y)
+        else:
+            return "Number" + " " + str(self.c) + " " + str(self.x) + " " + str(self.y)
 
 class Example_sword:
     def __init__(self, x, y, size=60, name="sword"):
