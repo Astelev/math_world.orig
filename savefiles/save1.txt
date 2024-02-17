@@ -1,7 +1,7 @@
 seed -15363
-Person 3 10 -2210.0 -112.0 400
+Person 3 10 -7210.0 -110.5 400
 inv 3 10
-None;None;None;None;None;None;ranged_weapon 3.0 10.0;None;Sword 5431.0 -588.0;None; :nextstr: None;None;None;None;Number 2 78.0 -601.5;None;None;None;Number 2 -182.0 -584.5;None; :nextstr: None;None;None;None;None;None;None;None;None;None; :nextstr:  
+None;None;None;None;None;None;ranged_weapon 3.0 10.0;None;Sword -7258.0 -572.5;None; :nextstr: None;None;None;None;Number 2 78.0 -601.5;None;None;None;None;None; :nextstr: None;None;None;Number / -2830.0 -1070.5;Number / -2789.0 -1067.5;Number + -2788.0 -1074.5;Number 2 -2728.0 -1070.5;None;Number 3 -2660.0 -1072.5;None; :nextstr:  
 Number 9 404.0 -274.5
 Number 6 709.1296916739234 -58.07440147440289
 Number 3 4075.0 -57.0
@@ -19,14 +19,23 @@ Number 9 12017.0 -51.0
 Number 9 11723.441578374104 -57.84368015925406
 Number - -8504.0 -1531.5
 Expression -11005.0 -1699.0
-Enemystr -2607.9723397449707 -669.7398977486852 80 2
-Enemystr -2907.601436227069 -1005.690725743839 150 /
-Number 8 -2881.0 -92.0
+Number 8 -2884.0 -62.0
 Number 6 -3316.0 -70.5
 Number 3 -2783.0 -157.0
-Enemystr -2608.1675490869156 -666.340221622181 80 8
 Number 3 -2352.0 -143.0
-Enemystr -2964.3380791731574 -671.0800526906152 80 5
 Expression -128463.0 -193.0
 Number 8 -1506.0 -69.0
-Enemystr -2891.8517635037097 -668.738605576957 80 9
+Number 3 -5779.0 -225.5
+Number 5 -5351.6013122951 -374.43605739759676
+Number 1 -4524.0 -63.5
+Number 7 -3766.0 -72.5
+Number 7 -8049.146491761951 -43.657094224455136
+Number 5 -6754.144750939392 -370.40940481607913
+Number 7 -5512.0 -64.5
+Enemystr -8040.8194439088165 -1849.1391602643 80 +
+Enemystr -9553.712248055386 -1881.4138169884593 80 +
+Enemystr -9552.751228457055 -1582.9187158277605 150 /
+Enemystr -9554.733212617863 -975.9508891898595 80 -
+Enemystr -8151.283186810058 -382.47143638332085 80 2
+Expression -7706.0 -159.5
+Expression -7583.0 -132.5

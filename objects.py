@@ -183,7 +183,7 @@ class Expression:
         self.right = []
         self.x = x
         self.y = y
-        self.sizex = size * (len(self.right) + len(self.left)) + 50
+        self.sizex = size//2 * (len(self.right) + len(self.left)) + 50
         self.sizey = size
         self.do = ["", 0]
         self.movable = True
@@ -214,13 +214,27 @@ class Expression:
             self.do[1] = 0
 
     def add(self, obj, x, y):
-        if x < self.x + 25:
-            i = (self.x + 25 - x) // self.sizey
+        if x < self.x + 25 + len(self.left)*(self.sizey//2):
+            i = (x - self.x) // (self.sizey//2)
             self.left.insert(int(i), obj)
         else:
-            i = (x - (self.x + 25)) // self.sizey
+            i = (x - (self.x + 25 + len(self.left)*(self.sizey//2))) // (self.sizey//2)
             self.right.insert(int(i), obj)
-        self.sizex = self.sizex * (len(self.right) + len(self.left))
+        self.sizex = (self.sizey // 2) * (len(self.right) + len(self.left)) + 50
+    def take(self, x, y, world):
+        x = x + world.camx
+        y = y + world.camy
+        result = False
+        if x < self.x + len(self.left)*(self.sizey//2):
+            i = (x - self.x) // (self.sizey//2)
+            result = self.left[int(i)]
+            del self.left[int(i)]
+        else:
+            i = (x - (self.x + 50 + len(self.left)*(self.sizey//2))) // (self.sizey//2)
+            result = self.right[int(i)]
+            del self.right[int(i)]
+        self.sizex = (self.sizey // 2) * (len(self.right) + len(self.left)) + 50
+        return result
 
     def data_return(self):
         return "Expression" + " " + str(self.x) + " " + str(self.y)

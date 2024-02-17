@@ -116,12 +116,20 @@ class World:
         # удаляет обьект с номером i
         self.col.pop(i)
 
-    def click(self, x, y):
+    def click(self, x, y, lis=False):
         # возвращает обьект на координатах x, y, eсли обьекта нет то возвращает False
+        if lis:
+            ans = []
         for i in self.col:
             if i.x < x + self.camx < i.x + i.sizex and i.y < y + self.camy < i.y + i.sizey:
-                return i
-        return False
+                if lis:
+                    ans.append(i)
+                else:
+                    return i
+        if lis:
+            return ans
+        else:
+            return False
 
 
 class Person:
@@ -159,7 +167,7 @@ class Person:
                     world.col[-1].set_direction((x - world.size[0]//2) / ((x - world.size[0]//2) ** 2 + (world.size[1]//2 - y) ** 2) ** 0.5,
                                                 (world.size[1]//2 - y) / -(((x - world.size[0]//2) ** 2 + (world.size[1]//2 - y) ** 2) ** 0.5))
                 elif enemy:
-                    if enemy.damageble and abs(x - 500) < self.use.dist and abs(y - 600) < self.use.dist:
+                    if enemy.damageble and abs(x - world.size[0]//2) < self.use.dist and abs(y - world.size[1]//2) < self.use.dist:
                         enemy.damag(self.use.damage)
             else:
                 self.do[1] = 20

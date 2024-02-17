@@ -363,15 +363,17 @@ if __name__ == '__main__':
             massage = ""
             random_generation(world)
             person = world.return_obj("person")  # ссылается на персонажа
-            btncraft = Button(450, 10, "craft")
+            btncraft = Button(450, 10, "craft") # кнопка крафта
             flag = False  # храниет в себе нажата ли кнопка мыши
-            returnd = False  # хранит в себе обьект на который было проиведено нажатие
+            returnd = False  # хранит в себе обьект на который наведена мышь
             while running:
                 # цикл игры, если прервать break то переходит в меню, если прервать с помощью running = False выходит из программы
                 x, y = pygame.mouse.get_pos()
                 if not flag and returnd:  # если до этого был обьект который мы двигали а сейчас отпустили убирает у него статус двигается
                     returnd.status_set("move", False)
-                returnd = world.click(x, y)
+                if not flag:
+                    returnd = world.click(x, y)
+                keys = pygame.key.get_pressed()
                 spawn_enemystr(person, world, clock)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -385,6 +387,11 @@ if __name__ == '__main__':
                         elif btncraft.check(x, y):
                             if not craftscreen(screen, clock, person.inventar):
                                 running = False
+                        elif keys[pygame.K_LSHIFT] and returnd:
+                            if returnd.name == "=":
+                                returnd = returnd.take(x, y, world)
+                                if returnd:
+                                    world.create_object(returnd)
                         else:
                             person.attack(returnd, x, y, world)
                     if event.type == pygame.MOUSEBUTTONUP:
@@ -394,12 +401,11 @@ if __name__ == '__main__':
                                 if person.put(x, y, returnd):
                                     world.del_object(world.col.index(returnd))
                             else:
-                                click = world.click(x+5, y + 30)
-                                if click and returnd.name != "=":
-                                    print(click.name)
-                                    if click.name == "=":
-                                        click.add(returnd, x, y)
-
+                                click = world.click(x, y, True)
+                                names = [i.name for i in click]
+                                if "=" in names and returnd.name != "=":
+                                    click[names.index("=")].add(returnd, returnd.x + returnd.sizex // 2, returnd.y + returnd.sizey // 2)
+                                    world.del_object(world.col.index(returnd))
                     if event.type == pygame.KEYDOWN and person.do[0] != "dead":
                         if event.key == 32:
                             person.jump()
@@ -407,12 +413,11 @@ if __name__ == '__main__':
                             person.choose(event.key - 49)
                 if person.do[0] != "dead":
                     if flag:
-                        if returnd:
+                        if returnd and not keys[pygame.K_LSHIFT]:
                             if returnd.movable:
                                 returnd.moveing(x, y, world.camx, world.camy)
                     if person.y > 10000:
                         person.status_set("dead", True)
-                    keys = pygame.key.get_pressed()
                     if keys[pygame.K_a]:
                         person.move(False)
                         if person.do[0] != "jump":
