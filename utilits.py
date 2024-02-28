@@ -246,6 +246,9 @@ class Person:
                 pygame.draw.rect(screen, (100, 100, 100), ((self.usenum - 1) * sizex, 0, sizex, sizey), 3)
             pygame.draw.rect(screen, (255, 255, 255), (750, 20, self.hp // 2, 10))
             pygame.draw.rect(screen, (0, 100, 100), (747, 17, 206, 16), 1)
+            if self.use:
+                print("a")
+                self.use.display_weapon(x, y, self.x + 45, self.y + 30, screen)
 
     def move(self, side):
         if side:
