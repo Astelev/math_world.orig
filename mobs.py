@@ -33,7 +33,7 @@ class Enemy:
             self.do[0] = ""
             self.do[1] = 0
 
-    def display(self, x, y, screen, collision):
+    def display(self, x, y, screen, collision, fps):
         if self.do[0] != "dead":
             if abs(self.person.x - self.x) < 1400 and abs(self.person.y - self.y) < 500:
               self.agr()
@@ -158,7 +158,7 @@ class Enemystr:
             self.do[0] = ""
             self.do[1] = 0
 
-    def display(self, x, y, screen, collision):
+    def display(self, x, y, screen, collision, fps):
         if self.do[0] != "dead":
             if abs(self.person.x - self.x) < 1000 and abs(self.person.y - self.y) < 500:
               self.agr()

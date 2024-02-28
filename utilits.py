@@ -72,7 +72,7 @@ class World:
     def create_collision(self, object):
         self.collisions.append(object)
 
-    def display(self):
+    def display(self, fps):
         # отображение обьектов и колизий
         r, g, b = self.backcol
         g = int(g - (self.camy + 200) * 0.01) % 255
@@ -92,7 +92,7 @@ class World:
                     self.localcollision.append(i)
         for i in self.col:
             if abs(i.x - self.camx) < self.size[0] + 100 and abs(i.y - self.camy) < self.size[1] + 100:
-                i.display(int(self.camx), int(self.camy), self.scr, self.localcollision)
+                i.display(int(self.camx), int(self.camy), self.scr, self.localcollision, fps)
                 if i.name == "Projectile":
                     temp = self.click(i.x - self.camx, i.y - self.camy)
                     if temp:
@@ -192,7 +192,7 @@ class Person:
             self.do[0] = ""
             self.do[1] = 0
 
-    def display(self, x, y, screen, collision):
+    def display(self, x, y, screen, collision, fps):
         # отображение и просчёт движения
         if self.do[0] != "dead":
             if random.randint(0, 1):
@@ -215,9 +215,9 @@ class Person:
                 self.status_set("jump", True)
             else:
                 self.status_set("jump", False)
-            self.x = self.x + self.vx
+            self.x = self.x + self.vx*(100 / fps)
             if self.do[0] == "jump":
-                self.y = self.y + self.vy
+                self.y = self.y + self.vy*(100 / fps)
                 self.vy = self.vy + 0.5
                 screen.blit(self.image, (self.x - x, self.y - y))
             elif self.do[0] == "moveright":

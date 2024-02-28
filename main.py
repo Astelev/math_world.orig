@@ -432,6 +432,7 @@ if __name__ == '__main__':
             random_generation(world)
             person = world.return_obj("person")  # ссылается на персонажа
             btncraft = Button(450, 10, "craft") # кнопка крафта
+            fps = 100
             flag = False  # храниет в себе нажата ли кнопка мыши
             returnd = False  # хранит в себе обьект на который наведена мышь
             while running:
@@ -505,10 +506,12 @@ if __name__ == '__main__':
                     break
                 else:
                     running = False
-                world.display()
+                world.display(fps)
                 btncraft.display(screen)
                 pygame.display.flip()
                 clock.tick(100)
+                fps = clock.get_fps()
+                print(fps)
             if not running:
                 break
         else:

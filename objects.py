@@ -15,7 +15,7 @@ class Number:
         self.damageble = False
         self.usable = False
 
-    def display(self, x, y, screen, colis):
+    def display(self, x, y, screen, colis, fps):
         font = pygame.font.Font(None, self.sizex)
         text = font.render(str(self.c), True, (255, 255, 255))
         screen.blit(text, (self.x - x, self.y - y))
@@ -61,7 +61,7 @@ class Example_sword:
         self.rollback = 50
         self.dist = 250
 
-    def display(self, x, y, screen, colis):
+    def display(self, x, y, screen, colis, fps):
         screen.blit(self.image, (self.x - x, self.y - y))
 
     def display_into_inventar(self, screen, x, y, sizex, sizey):
@@ -99,7 +99,7 @@ class Projectile:
         self.do = ["", 0]
         self.drop = ["number", 10]
 
-    def display(self, x, y, screen, collisions):
+    def display(self, x, y, screen, collisions, fps):
         screen.blit(self.image, (self.x - x, self.y - y))
         for i in collisions:
             col = i.collision_chek(self.x, self.y, self.sizex, self.sizey)
@@ -150,7 +150,7 @@ class RangedWeapon:
         self.damage = 40
         self.rollback = 50
 
-    def display(self, x, y, screen, colis):
+    def display(self, x, y, screen, colis, fps):
         screen.blit(self.image, (self.x - x, self.y - y))
 
     def display_into_inventar(self, screen, x, y, sizex, sizey):
@@ -192,7 +192,7 @@ class Expression:
         self.damageble = False
         self.usable = False
 
-    def display(self, x, y, screen, colis):
+    def display(self, x, y, screen, colis, fps):
         font = pygame.font.Font(None, self.sizey)
         text = font.render(" ".join([i.name for i in self.left]) + " = " + " ".join([i.name for i in self.right]), True, (255, 255, 255))
         screen.blit(text, (self.x - x, self.y - y))
