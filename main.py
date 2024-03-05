@@ -438,6 +438,8 @@ if __name__ == '__main__':
             while running:
                 # цикл игры, если прервать break то переходит в меню, если прервать с помощью running = False выходит из программы
                 x, y = pygame.mouse.get_pos()
+                person.xmous = x
+                person.ymous = y
                 if not flag and returnd:  # если до этого был обьект который мы двигали а сейчас отпустили убирает у него статус двигается
                     returnd.status_set("move", False)
                 if not flag:

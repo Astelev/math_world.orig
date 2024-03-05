@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import os
 import sys
@@ -156,6 +158,8 @@ class Person:
         self.damageble = False
         self.use = False
         self.usenum = 0
+        self.xmous = 0
+        self.ymous = 0
 
     def attack(self, enemy, x, y, world):
         self.status_set("attack", True)
@@ -247,7 +251,23 @@ class Person:
             pygame.draw.rect(screen, (255, 255, 255), (750, 20, self.hp // 2, 10))
             pygame.draw.rect(screen, (0, 100, 100), (747, 17, 206, 16), 1)
             if self.use:
-                self.use.display_weapon(x, y, self.x + 45, self.y + 30, screen)
+                angle = 0
+                revers = False
+                if 1080*2/3 < self.ymous :
+                    angle = -45
+                    if self.xmous < (1920/2 - 100):
+                        revers = True
+                        x = x + 70
+                elif self.ymous < 1080/3:
+                    angle = 45
+                    x = x + 25
+                    if self.xmous < (1920/2 - 100):
+                        revers = True
+                        x = x + 40
+                elif self.xmous < (1920/2 - 100):
+                        revers = True
+                        x = x + 50
+                self.use.display_weapon(x, y, self.x + 45, self.y + 30, screen, angle, revers)
 
     def move(self, side):
         if side:

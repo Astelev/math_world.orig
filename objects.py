@@ -64,8 +64,11 @@ class Example_sword:
     def display(self, x, y, screen, colis, fps):
         screen.blit(self.image, (self.x - x, self.y - y))
 
-    def display_weapon(self, xcam, ycam, x, y, screen):
-        screen.blit(self.image, (x - xcam, y - ycam))
+    def display_weapon(self, xcam, ycam, x, y, screen, angle, revers):
+        if revers:
+            screen.blit(pygame.transform.flip(pygame.transform.rotate(self.image, angle), True, False), (x - xcam, y - ycam))
+        else:
+            screen.blit(pygame.transform.rotate(self.image, angle), (x - xcam, y - ycam))
 
     def display_into_inventar(self, screen, x, y, sizex, sizey):
         screen.blit(pygame.transform.scale(self.image, (sizex - 10, sizey - 10)), (x, y))
@@ -134,6 +137,8 @@ class Projectile:
         elif self.do[0] == do and not status:
             self.do[0] = ""
             self.do[1] = 0
+    def data_return(self):
+        return "progectile f"
 
 
 # Создание класса дальнобойного оружия
@@ -156,8 +161,12 @@ class RangedWeapon:
     def display(self, x, y, screen, colis, fps):
         screen.blit(self.image, (self.x - x, self.y - y))
 
-    def display_weapon(self, xcam, ycam, x, y, screen):
-        screen.blit(self.image, (x - xcam, y - ycam))
+    def display_weapon(self, xcam, ycam, x, y, screen, angle, revers):
+        if revers:
+            screen.blit(pygame.transform.flip(pygame.transform.rotate(self.image, angle), True, False),
+                        (x - xcam, y - ycam))
+        else:
+            screen.blit(pygame.transform.rotate(self.image, angle), (x - xcam, y - ycam))
 
     def display_into_inventar(self, screen, x, y, sizex, sizey):
         screen.blit(pygame.transform.scale(self.image, (sizex - 10, sizey - 10)), (x, y))
