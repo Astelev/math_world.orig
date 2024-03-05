@@ -246,10 +246,12 @@ class Expression:
             i = (x - self.x) // (self.sizey//2)
             result = self.left[int(i)]
             del self.left[int(i)]
-        else:
+        elif x > self.x + len(self.left)*(self.sizey//2) + 30:
             i = (x - (self.x + 50 + len(self.left)*(self.sizey//2))) // (self.sizey//2)
             result = self.right[int(i)]
             del self.right[int(i)]
+        else:
+            self.right = [Number(eval("".join([i.name for i in self.left])), self.x, self.y)]
         self.sizex = (self.sizey // 2) * (len(self.right) + len(self.left)) + 50
         return result
 
