@@ -251,7 +251,7 @@ class Expression:
             result = self.right[int(i)]
             del self.right[int(i)]
         else:
-            self.right = [Number(eval("".join([i.name for i in self.left])), self.x, self.y)]
+            self.right = [Number(int(eval("".join([i.name for i in self.left]))), self.x, self.y)]
         self.sizex = (self.sizey // 2) * (len(self.right) + len(self.left)) + 50
         return result
 
